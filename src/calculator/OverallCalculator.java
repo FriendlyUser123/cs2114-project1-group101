@@ -68,11 +68,44 @@ public class OverallCalculator {
      * Bad menu input shows an error and asks again.
      */
     public void run() {
-        // TODO: loop until the user picks 3.
-        // print menu -> read a line -> parseMenuChoice in a try/catch ->
-        // call runFourFunctionCalculator / runPolynomialCalculator, print the
-        // result -> on IllegalArgumentException print the message and loop.
-        throw new UnsupportedOperationException("TODO: OverallCalculator.run");
+        boolean menuLoop = true;
+        while (menuLoop)
+        {
+            System.out.println("Welcome to myFieldCalc! Press 1 for 4-function"
+                + " calculator, 2 for polynomial calculator, and 3 to exit.");
+            int menuChoice = 0;
+            
+            try
+            {
+                menuChoice = this.parseMenuChoice(scanner.nextLine());
+            }
+            catch (IllegalArgumentException e)
+            {
+                System.out.println("Try again");
+            }
+            
+            if (menuChoice == 1)
+            {
+                System.out.println("Starting 4-Function Calculator...");
+                this.runFourFunctionCalculator();
+                System.out.println("Operation complete, you are being "
+                    + "directed back to the main menu...");
+            }
+            else if (menuChoice == 2)
+            {
+                System.out.println("Starting Polynomial Calculator...");
+                Polynomial polyResult = this.runPolynomialCalculator();
+                System.out.println("Result: " + polyResult.toString());
+                System.out.println("Operation complete, you are being "
+                    + "directed back to the main menu...");
+            }
+            else if (menuChoice == 3)
+            {
+                System.out.println("Goodbye!");
+                scanner.close();
+                menuLoop = false;
+            }
+        }
     }
 
 
@@ -86,11 +119,124 @@ public class OverallCalculator {
      * @return the answer
      */
     public double runFourFunctionCalculator() {
-        // TODO: read value 1 (parseBasicValue, so "ANS" works), operator
-        // (parseBasicOperator), value 2, then call the matching method on
-        // fourFunctionCalc. Re-prompt each piece on IllegalArgumentException.
-        throw new UnsupportedOperationException(
-            "TODO: OverallCalculator.runFourFunctionCalculator");
+        double lastResult = 0.0;
+        boolean calcRunning = true;
+        fourFunctionCalc = new FourFunctionCalculator();
+        while (calcRunning)
+        {
+            boolean gettingValue1 = true;
+            boolean gettingValue2 = true;
+            boolean gettingOperator = true;
+            
+            double value1 = 0.0;
+            double value2 = 0.0;
+            char operator = ' ';
+            double result = 0.0;
+            
+            while (gettingValue1)
+            {
+                System.out.println("Enter value 1 (Enter ANS for "
+                    + "last result, Enter EXIT to go back to main menu): ");
+                String in = scanner.nextLine();
+                if (in.equalsIgnoreCase("EXIT"))
+                {
+                    calcRunning = false;
+                    break;
+                }
+                try
+                {
+                    value1 = this.parseBasicValue(in);
+                    gettingValue1 = false;
+                }
+                catch (IllegalArgumentException e)
+                {
+                    System.out.println("Try again");
+                }
+            }
+            if (!calcRunning)
+            {
+                break;
+            }
+            while (gettingOperator)
+            {
+                System.out.println("Enter operator: ");
+                try
+                {
+                    operator = this.parseBasicOperator(scanner.nextLine());
+                    gettingOperator = false;
+                }
+                catch (IllegalArgumentException e)
+                {
+                    System.out.println("Try again");
+                }
+                
+            }
+            while (gettingValue2)
+            {
+                System.out.println("Enter value 2 (Enter ANS for "
+                    + "last result): ");
+                try
+                {
+                    value2 = this.parseBasicValue(scanner.nextLine());
+                    gettingValue2 = false;
+                }
+                catch (IllegalArgumentException e)
+                {
+                    System.out.println("Try again");
+                }
+                
+            }
+            
+            if (operator == '+')
+            {
+                try
+                {
+                    result = fourFunctionCalc.add(value1, value2);
+                }
+                catch (Exception e)
+                {
+                    System.out.println("try again");
+                }
+            }
+            else if (operator == '-')
+            {
+                try
+                {
+                    result = fourFunctionCalc.subtract(value1, value2);
+                }
+                catch (Exception e)
+                {
+                    System.out.println("try again");
+                }
+            }
+            else if (operator == '*')
+            {
+                try
+                {
+                    result = fourFunctionCalc.multiply(value1, value2);
+                }
+                catch (Exception e)
+                {
+                    System.out.println("try again");
+                }
+            }
+            else if (operator == '/')
+            {
+                try
+                {
+                    result = fourFunctionCalc.divide(value1, value2);
+                }
+                catch (Exception e)
+                {
+                    System.out.println("try again");
+                }
+            }
+            
+            System.out.println("Result: " + Double.toString(result));
+            
+        }
+        
+        return lastResult;
     }
 
 
@@ -145,11 +291,21 @@ public class OverallCalculator {
      *             if the text is not a whole number from 0 to a sensible limit
      */
     public int parseDegree(String input) {
-        // TODO: trim; Integer.parseInt inside try/catch (NumberFormatException
-        // -> IllegalArgumentException); reject negatives and anything above
-        // your max degree (pick a limit, e.g. 20, and state it in the README).
-        throw new UnsupportedOperationException(
-            "TODO: OverallCalculator.parseDegree");
+        int degree;
+        try
+        {
+            degree = Integer.parseInt(input);
+        }
+        catch (NumberFormatException e)
+        {
+            throw new IllegalArgumentException("Entry is invalid, try again");
+        }
+        if (degree < 0 || degree > 100)
+        {
+            throw new IllegalArgumentException("Degree is out of bounds");
+        }
+        
+        return degree;
     }
 
 
@@ -165,11 +321,25 @@ public class OverallCalculator {
      *             if the text is blank, not a number, or infinite/NaN
      */
     public double parseValidDouble(String input) {
-        // TODO: null/blank check; Double.parseDouble in try/catch; reject
-        // NaN and Infinity (parseDouble accepts the strings "NaN" and
-        // "Infinity"!). Scope doc also limits input to 20 characters.
-        throw new UnsupportedOperationException(
-            "TODO: OverallCalculator.parseValidDouble");
+        double validDouble;
+        if (input.length() > 100)
+        {
+            throw new IllegalArgumentException("Over character limit");
+        }
+        try
+        {
+            validDouble = Double.parseDouble(input);
+        }
+        catch (NumberFormatException e)
+        {
+            throw new IllegalArgumentException("Entry is invalid, try again");
+        }
+        if (Double.isNaN(validDouble) || Double.isInfinite(validDouble) )
+        {
+            throw new IllegalArgumentException("Entry is invalid, try again");
+        }
+        
+        return validDouble;
     }
 
 
@@ -185,9 +355,14 @@ public class OverallCalculator {
      *             if the text is not exactly one of those operators
      */
     public char parseBasicOperator(String input) {
-        // TODO: trim; must be exactly one character and one of "+-*/".
-        throw new UnsupportedOperationException(
-            "TODO: OverallCalculator.parseBasicOperator");
+        if (!(input.equals("+") || input.equals("-") || input.equals("*") 
+            || input.equals("/")))
+        {
+            throw new IllegalArgumentException("invalid operator input");
+        }
+        
+        char operator = input.charAt(0);
+        return operator;
     }
 
 
@@ -204,10 +379,16 @@ public class OverallCalculator {
      *             if the text is invalid, or is "ANS" with nothing stored
      */
     public double parseBasicValue(String input) {
-        // TODO: if input equalsIgnoreCase("ANS"): check fourFunctionCalc
-        // .hasLast() and return getLast(); otherwise parseValidDouble(input).
-        throw new UnsupportedOperationException(
-            "TODO: OverallCalculator.parseBasicValue");
+        if (input.equalsIgnoreCase("ANS"))
+        {
+            if (fourFunctionCalc.hasLast())
+            {
+                return fourFunctionCalc.getLast();
+            }
+            throw new IllegalArgumentException("No previous answer");
+        }
+        
+        return this.parseValidDouble(input);
     }
 
 
@@ -224,9 +405,13 @@ public class OverallCalculator {
      *             if the text is not one of those operators
      */
     public char parsePolynomialOperator(String input) {
-        // TODO: same as parseBasicOperator but only "+-*".
-        throw new UnsupportedOperationException(
-            "TODO: OverallCalculator.parsePolynomialOperator");
+        if (!(input.equals("+") || input.equals("-") || input.equals("*")))
+        {
+            throw new IllegalArgumentException("invalid operator input");
+        }
+        
+        char operator = input.charAt(0);
+        return operator;
     }
 
 
@@ -242,8 +427,12 @@ public class OverallCalculator {
      *             if the text is not 1, 2, or 3
      */
     public int parseMenuChoice(String input) {
-        // TODO: trim; Integer.parseInt in try/catch; must be 1, 2, or 3.
-        throw new UnsupportedOperationException(
-            "TODO: OverallCalculator.parseMenuChoice");
+        if (!(input.equals("1") || input.equals("2") || input.equals("3")))
+        {
+            throw new IllegalArgumentException("invalid menu choice input");
+        }
+        
+        int choice = Integer.parseInt(input);
+        return choice;
     }
 }
