@@ -419,7 +419,7 @@ public class OverallCalculator {
      */
     public void runDerivativeSolver()
     {
-        DerivativeCalculator derive = new DerivativeCalculator;
+        DerivativeCalculator derive = new DerivativeCalculator();
         
         System.out.println("First enter your polynomial: ");
         Polynomial poly = this.getPolynomialFromUser();

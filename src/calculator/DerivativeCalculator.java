@@ -35,15 +35,15 @@ public class DerivativeCalculator
         {
             throw new IllegalArgumentException("Invalid x value.");
         }
-        
+
         double[] coefficients = poly.toCoefficientArray();
         double result = 0.0;
-        
+
         for (int i = 0; i < coefficients.length; i++)
         {
             result += coefficients[i] * Math.pow(x, i);
         }
-        
+
         if (Double.isNaN(result) || Double.isInfinite(result))
         {
             throw new ArithmeticException(
@@ -84,7 +84,7 @@ public class DerivativeCalculator
     
     for (int i = 1; i < coefficients.length; i++)
     {
-    result += i * coefficients[i]
+    result += i * coefficients[i];
     Math.pow(x, i - 1);
     }
     
