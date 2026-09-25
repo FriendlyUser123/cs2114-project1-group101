@@ -596,9 +596,16 @@ public class OverallCalculator
             try
             {
                 interval = parseDegree(scanner.nextLine());
+                
+                if (interval <= 0 || interval % 2 != 0)
+                {
+                    throw new IllegalArgumentException(
+                        "Number of intervals must be positive and even.");
+                }
+                
                 gettingInterval = false;
             }
-            catch (IllegalArgumentException e)
+            catch (IllegalArgumentException | ArithmeticException e)
             {
                 System.out.println(e.getMessage());
             }
@@ -610,7 +617,7 @@ public class OverallCalculator
                 integrate.simpsonsRule(poly, lower, upper, interval);
 
             System.out.println(
-                "The integral of " + poly.toString() + "is "
+                "The integral of " + poly.toString() + " is "
                     + formatResult(integral) + " Between " + formatResult(lower)
                     + " and " + formatResult(upper) + " with "
                     + formatResult(interval) + " subintervals ");

@@ -3,7 +3,8 @@ package calculator;
 /**
  * Solves integrals numerically with the power rule and Simpson's rule.
  * 
- * @author
+ * @author Nandini
+ * @author Ethan
  * @version Sep 25, 2026
  */
 

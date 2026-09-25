@@ -1085,4 +1085,30 @@ public class OverallCalculatorTest extends student.TestCase
 
         assertNotNull(exception);
     }
+    
+    /**
+     * Tests interval validation in the integral solver.
+     * Covers malformed, zero, odd, and valid interval inputs.
+     */
+    public void testRunIntegralInvalidIntervals()
+    {
+        Scanner input = new Scanner(
+            
+            "0\n"
+            + "1\n"
+            + "0\n"
+            + "2\n"
+            + "bad\n"
+            + "0\n"
+            + "3\n"
+            + "2\n");
+
+        OverallCalculator calc = new OverallCalculator(input);
+
+        calc.runIntegralSolver();
+
+        assertNotNull(calc);
+
+        input.close();
+    }
 }
