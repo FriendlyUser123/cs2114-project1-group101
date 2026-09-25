@@ -56,7 +56,7 @@ public class IntegralCalculator
                 result += 4.0 * y;
             }
         }
-        result = h / 3.0;
+        result *= h / 3.0;
         if (Double.isNaN(result) || Double.isInfinite(result))
         {
             throw new ArithmeticException(

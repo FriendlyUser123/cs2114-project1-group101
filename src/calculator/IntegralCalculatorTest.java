@@ -16,6 +16,7 @@ public class IntegralCalculatorTest
     private IntegralCalculator calc;
     private Polynomial poly;
 
+
     /**
      * Creates a calculator and polynomial before each test.
      */
@@ -27,21 +28,20 @@ public class IntegralCalculatorTest
 
 
     /**
-     * Tests creation of an IntegralCalculator.
+     * Tests construction of an IntegralCalculator.
      */
-    @Test
     public void testIntegralCalculator()
     {
-        IntegralCalculator testCalc = new IntegralCalculator();
+        IntegralCalculator testCalc =
+            new IntegralCalculator();
 
         assertNotNull(testCalc);
     }
 
 
     /**
-     * Tests direct polynomial evaluation.
+     * Tests evaluating a polynomial at an x value.
      */
-    @Test
     public void testEvaluatePolynomial()
     {
         // f(x) = 3x^2 - 2x + 5
@@ -49,62 +49,100 @@ public class IntegralCalculatorTest
         poly.addTerm(-2.0, 1);
         poly.addTerm(5.0, 0);
 
-        // f(2) = 3(4) - 4 + 5 = 13
-        double result = calc.evaluatePolynomial(poly, 2.0);
+        // f(2) = 12 - 4 + 5 = 13
+        double result =
+            calc.evaluatePolynomial(poly, 2.0);
 
         assertEquals(13.0, result, DELTA);
 
-        // Also test a constant polynomial
-        Polynomial constant = new Polynomial();
-        constant.addTerm(7.5, 0);
+        // Check a negative x as well:
+        // f(-2) = 12 + 4 + 5 = 21
+        result =
+            calc.evaluatePolynomial(poly, -2.0);
 
-        result = calc.evaluatePolynomial(constant, -20.0);
+        assertEquals(21.0, result, DELTA);
 
-        assertEquals(7.5, result, DELTA);
-    }
+        // Zero polynomial
+        Polynomial zero = new Polynomial();
 
-
-    /**
-     * Tests normal Simpson's Rule operation. Simpson's Rule exactly integrates
-     * cubic polynomials.
-     */
-    @Test
-    public void testSimpsonsRule()
-    {
-        // f(x) = x^3
-        poly.addTerm(1.0, 3);
-
-        /*
-         * Integral from 0 to 2: x^4 / 4 from 0 to 2 = 16 / 4 = 4 Four intervals
-         * also causes the loop to use both the 4*y and 2*y branches.
-         */
-        double result = calc.simpsonsRule(poly, 0.0, 2.0, 4);
-
-        assertEquals(4.0, result, DELTA);
-
-        // Reversed bounds should produce the negative integral.
-        result = calc.simpsonsRule(poly, 2.0, 0.0, 4);
-
-        assertEquals(-4.0, result, DELTA);
-
-        // Equal bounds should have integral zero.
-        result = calc.simpsonsRule(poly, 2.0, 2.0, 4);
+        result =
+            calc.evaluatePolynomial(zero, 7.0);
 
         assertEquals(0.0, result, DELTA);
     }
 
 
     /**
-     * Tests null polynomial input.
+     * Tests normal Simpson's Rule behavior.
      */
-    @Test
+    public void testSimpsonsRuleNormal()
+    {
+        // f(x) = x^2
+        poly.addTerm(1.0, 2);
+
+        /*
+         * Integral from 0 to 3:
+         *
+         * x^3 / 3 from 0 to 3 = 9
+         *
+         * Four intervals also causes the loop to use
+         * BOTH Simpson weighting branches:
+         *
+         * i = 1 -> weight 4
+         * i = 2 -> weight 2
+         * i = 3 -> weight 4
+         */
+        double result =
+            calc.simpsonsRule(
+                poly,
+                0.0,
+                3.0,
+                4);
+
+        assertEquals(9.0, result, DELTA);
+
+
+        /*
+         * Reversing the bounds should reverse the sign.
+         */
+        result =
+            calc.simpsonsRule(
+                poly,
+                3.0,
+                0.0,
+                4);
+
+        assertEquals(-9.0, result, DELTA);
+
+
+        /*
+         * Identical bounds should produce zero area.
+         */
+        result =
+            calc.simpsonsRule(
+                poly,
+                2.0,
+                2.0,
+                4);
+
+        assertEquals(0.0, result, DELTA);
+    }
+
+
+    /**
+     * Tests rejection of a null polynomial.
+     */
     public void testNullPolynomial()
     {
         IllegalArgumentException exception = null;
 
         try
         {
-            calc.simpsonsRule(null, 0.0, 2.0, 4);
+            calc.simpsonsRule(
+                null,
+                0.0,
+                2.0,
+                4);
         }
         catch (IllegalArgumentException e)
         {
@@ -116,19 +154,23 @@ public class IntegralCalculatorTest
 
 
     /**
-     * Tests invalid integration bounds.
+     * Tests every invalid-bound condition.
      */
-    @Test
     public void testInvalidBounds()
     {
         poly.addTerm(1.0, 2);
 
-        // NaN lower bound
+
+        // Lower bound is NaN
         IllegalArgumentException lowerNaNException = null;
 
         try
         {
-            calc.simpsonsRule(poly, Double.NaN, 2.0, 4);
+            calc.simpsonsRule(
+                poly,
+                Double.NaN,
+                2.0,
+                4);
         }
         catch (IllegalArgumentException e)
         {
@@ -137,12 +179,17 @@ public class IntegralCalculatorTest
 
         assertNotNull(lowerNaNException);
 
-        // Infinite lower bound
+
+        // Lower bound is infinite
         IllegalArgumentException lowerInfinityException = null;
 
         try
         {
-            calc.simpsonsRule(poly, Double.POSITIVE_INFINITY, 2.0, 4);
+            calc.simpsonsRule(
+                poly,
+                Double.POSITIVE_INFINITY,
+                2.0,
+                4);
         }
         catch (IllegalArgumentException e)
         {
@@ -151,12 +198,17 @@ public class IntegralCalculatorTest
 
         assertNotNull(lowerInfinityException);
 
-        // NaN upper bound
+
+        // Upper bound is NaN
         IllegalArgumentException upperNaNException = null;
 
         try
         {
-            calc.simpsonsRule(poly, 0.0, Double.NaN, 4);
+            calc.simpsonsRule(
+                poly,
+                0.0,
+                Double.NaN,
+                4);
         }
         catch (IllegalArgumentException e)
         {
@@ -165,12 +217,17 @@ public class IntegralCalculatorTest
 
         assertNotNull(upperNaNException);
 
-        // Infinite upper bound
+
+        // Upper bound is infinite
         IllegalArgumentException upperInfinityException = null;
 
         try
         {
-            calc.simpsonsRule(poly, 0.0, Double.POSITIVE_INFINITY, 4);
+            calc.simpsonsRule(
+                poly,
+                0.0,
+                Double.NEGATIVE_INFINITY,
+                4);
         }
         catch (IllegalArgumentException e)
         {
@@ -182,19 +239,23 @@ public class IntegralCalculatorTest
 
 
     /**
-     * Tests invalid numbers of intervals.
+     * Tests invalid numbers of Simpson intervals.
      */
-    @Test
     public void testInvalidIntervals()
     {
         poly.addTerm(1.0, 2);
 
-        // Intervals must be positive.
+
+        // Must be greater than zero
         IllegalArgumentException zeroException = null;
 
         try
         {
-            calc.simpsonsRule(poly, 0.0, 2.0, 0);
+            calc.simpsonsRule(
+                poly,
+                0.0,
+                2.0,
+                0);
         }
         catch (IllegalArgumentException e)
         {
@@ -203,12 +264,17 @@ public class IntegralCalculatorTest
 
         assertNotNull(zeroException);
 
-        // Intervals must also be even.
+
+        // Must be even
         IllegalArgumentException oddException = null;
 
         try
         {
-            calc.simpsonsRule(poly, 0.0, 2.0, 3);
+            calc.simpsonsRule(
+                poly,
+                0.0,
+                2.0,
+                3);
         }
         catch (IllegalArgumentException e)
         {
@@ -220,22 +286,31 @@ public class IntegralCalculatorTest
 
 
     /**
-     * Tests an integral whose result overflows to infinity.
+     * Tests an integral whose result becomes positive infinity.
      */
-    @Test
     public void testInfiniteResult()
     {
         /*
-         * Double.MAX_VALUE is finite, so this is theoretically something a user
-         * could enter.
+         * This is still a finite coefficient.
+         *
+         * f(x) = Double.MAX_VALUE
+         *
+         * Adding multiple Simpson samples causes the
+         * accumulated result to overflow.
          */
-        poly.addTerm(Double.MAX_VALUE, 0);
+        poly.addTerm(
+            Double.MAX_VALUE,
+            0);
 
         ArithmeticException exception = null;
 
         try
         {
-            calc.simpsonsRule(poly, 0.0, 2.0, 2);
+            calc.simpsonsRule(
+                poly,
+                0.0,
+                2.0,
+                2);
         }
         catch (ArithmeticException e)
         {
@@ -247,21 +322,36 @@ public class IntegralCalculatorTest
 
 
     /**
-     * Tests an integral calculation that results in NaN.
+     * Tests an integral whose intermediate result becomes NaN.
      */
-    @Test
     public void testNaNResult()
     {
         /*
-         * Both bounds themselves are finite. upperBound - lowerBound overflows
-         * to infinity, making h infinite. The zero polynomial then eventually
-         * produces 0 * Infinity, giving NaN.
+         * f(x) = Double.MAX_VALUE * x
+         *
+         * At x = -2:
+         * result becomes negative infinity.
+         *
+         * At x = 2:
+         * result becomes positive infinity.
+         *
+         * -Infinity + Infinity = NaN.
+         *
+         * All values supplied to the calculator itself are finite.
          */
+        poly.addTerm(
+            Double.MAX_VALUE,
+            1);
+
         ArithmeticException exception = null;
 
         try
         {
-            calc.simpsonsRule(poly, -Double.MAX_VALUE, Double.MAX_VALUE, 2);
+            calc.simpsonsRule(
+                poly,
+                -2.0,
+                2.0,
+                2);
         }
         catch (ArithmeticException e)
         {
