@@ -152,23 +152,63 @@ public class Polynomial {
     public String toString() {
         String polyString = "";
         double[] coeffArray = this.toCoefficientArray();
-        
-        for (int i = coeffArray.length - 1; i > 0; i--)
+        boolean firstTerm = true;
+
+        for (int i = coeffArray.length - 1; i >= 0; i--)
         {
-            if (coeffArray[i] != 0.0)
+            double coeff = coeffArray[i];
+
+            if (coeff == 0.0)
             {
-                polyString += Double.toString(coeffArray[i]) + "x^" + 
-                Integer.toString(i) + " + ";
+                continue;
             }
+            if (!firstTerm)
+            {
+                if (coeff > 0)
+                {
+                    polyString += " + ";
+                }
+                else
+                {
+                    polyString += " - ";
+                }
+            }
+            else if (coeff < 0)
+            {
+                polyString += "-";
+            }
+
+            double absCoeff = Math.abs(coeff);
+            
+            if (absCoeff != 1.0 || i == 0)
+            {
+                
+                if (absCoeff == (long)absCoeff)
+                {
+                    polyString += Long.toString((long)absCoeff);
+                }
+                else
+                {
+                    polyString += Double.toString(absCoeff);
+                }
+            }
+
+
+            if (i > 1)
+            {
+                polyString += "x^" + Integer.toString(i);
+            }
+            else if (i == 1)
+            {
+                polyString += "x";
+            }
+
+            firstTerm = false;
         }
-        polyString += Double.toString(coeffArray[0]);
-        
-        if (polyString.isEmpty())
+        if (firstTerm)
         {
             return "0";
         }
-        
+
         return polyString;
-        
-    }
-}
+    }}
