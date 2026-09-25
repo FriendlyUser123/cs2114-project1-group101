@@ -64,5 +64,23 @@ public class IntegralCalculator
         }
         return result;
     }
+    
+    /**
+    Evaluates the polynomial at a given x value.
+
+    @param poly the polynomial to evaluate
+
+    @param x the x value to evaluate at
+    */
+    public double evaluatePolynomial(Polynomial poly, double x)
+    {
+        double[] coefficients = poly.toCoefficientArray();
+        double result = 0.0;
+        for (int i = 0; i < coefficients.length; i++)
+        {
+            result += coefficients[i] * Math.pow(x, i);
+        }
+        return result;
+    }
 
 }
