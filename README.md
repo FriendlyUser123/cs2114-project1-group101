@@ -1,10 +1,11 @@
 # myFieldCalc — CS 2114 Project 1 (Group 101)
 
-A command-line calculator with two modes:
+A command-line calculator with three modes:
 
 1. **Four-function calculator.** Add, subtract, multiply, and divide decimal numbers.
    Type `ANS` to reuse the last answer.
 2. **Polynomial calculator.** Enter two polynomials, then add, subtract, or multiply them.
+3. **Derivative calculator.** Enter a polynomial and an x value to get y and y′ at that x.
 
 Bad input never crashes the program. It prints what went wrong and asks again.
 
@@ -22,7 +23,7 @@ java -cp bin calculator.OverallCalculator
 
 ## Use it
 
-At the menu, type **1** (four-function), **2** (polynomial), or **3** (quit).
+At the menu, type **1** (four-function), **2** (polynomial), **3** (quit), or **4** (derivative).
 
 **Four-function:** enter a number, an operator (`+ - * /`), and a second number.
 Type `ANS` for the last answer, or `EXIT` to go back to the menu.
@@ -37,6 +38,12 @@ power down. Leave a coefficient blank to use 0. Then pick `+`, `-`, or `*`.
 
 ```
 (x + 2) * (x + 3)   →   The resulting polynomial is: x^2 + 5x + 6
+```
+
+**Derivative:** enter a polynomial the same way, then an x value.
+
+```
+3x^2 + 2x + 1 at x = 2   →   At x = 2, y = 17 and y' = 14
 ```
 
 **Bad input the program catches:** letters where a number goes, a wrong operator,
@@ -55,10 +62,13 @@ The tests use the course's `CS2-Support` project, which must be in your workspac
 | `OverallCalculator` | Menu, reading input, and checking input (the `parse…` methods) |
 | `FourFunctionCalculator` | `+ - * /` on decimals and remembers the last answer |
 | `PolynomialCalculator` | `+ - *` on two `Polynomial`s |
+| `DerivativeCalculator` | Evaluates a polynomial and its derivative at an x value |
 | `Polynomial` | A list of `Term`s |
 | `Term` | One coefficient and degree, like `5x^3` |
 
 ### System diagram
+
+From our Deliverable 2 spec. `DerivativeCalculator` was added after it, as a stretch goal.
 
 ![System diagram](diagram.png)
 
