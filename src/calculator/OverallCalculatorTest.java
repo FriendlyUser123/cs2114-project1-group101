@@ -58,11 +58,13 @@ public class OverallCalculatorTest extends student.TestCase {
      * invalid menu choice
      * four-function calculator selection
      * polynomial calculator selection
+     * derivative calculator selection
      * exit
      */
     public void testRun() {
-        Scanner input = new Scanner("4\n" + "1\n" + "5\n" + "+\n" + "8\n"
-            + "EXIT\n" + "2\n" + "0\n" + "1\n" + "0\n" + "2\n" + "+\n" + "3\n");
+        Scanner input = new Scanner("5\n" + "1\n" + "5\n" + "+\n" + "8\n"
+            + "EXIT\n" + "2\n" + "0\n" + "1\n" + "0\n" + "2\n" + "+\n" + "4\n"
+            + "1\n" + "2\n" + "3\n" + "2\n" + "3\n");
 
         OverallCalculator calc = new OverallCalculator(input);
 
@@ -477,6 +479,35 @@ public class OverallCalculatorTest extends student.TestCase {
 
 
     /**
+     * Tests the derivative calculator menu flow.
+     *
+     * Covers:
+     * normal polynomial and x value
+     * bad x value, then a valid one
+     * a result too large to calculate
+     * running out of input
+     */
+    public void testRunDerivativeSolver() {
+        Scanner input = new Scanner("2\n" + "3\n" + "2\n" + "1\n" + "abc\n"
+            + "2\n");
+        OverallCalculator calc = new OverallCalculator(input);
+        calc.runDerivativeSolver();
+
+        Scanner bigInput = new Scanner("2\n" + "1\n" + "0\n" + "0\n"
+            + "1e200\n");
+        OverallCalculator bigCalc = new OverallCalculator(bigInput);
+        bigCalc.runDerivativeSolver();
+
+        OverallCalculator emptyCalc = new OverallCalculator(new Scanner(""));
+        emptyCalc.runDerivativeSolver();
+
+        assertNotNull(calc);
+        assertNotNull(bigCalc);
+        assertNotNull(emptyCalc);
+    }
+
+
+    /**
      * Tests all valid menu choices and invalid menu input.
      */
     public void testParseMenuChoice() {
@@ -485,11 +516,12 @@ public class OverallCalculatorTest extends student.TestCase {
         assertEquals(1, calc.parseMenuChoice("1"));
         assertEquals(2, calc.parseMenuChoice("2"));
         assertEquals(3, calc.parseMenuChoice("3"));
+        assertEquals(4, calc.parseMenuChoice("4"));
 
         IllegalArgumentException exception = null;
 
         try {
-            calc.parseMenuChoice("4");
+            calc.parseMenuChoice("5");
         }
         catch (IllegalArgumentException e) {
             exception = e;
