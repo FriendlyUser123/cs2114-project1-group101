@@ -10,7 +10,7 @@ import org.junit.Test;
  *  @version Sep 25, 2026
  */
 
-public class IntegralCalculatorTest
+public class IntegralCalculatorTest extends student.TestCase
 {
     private static final double DELTA = 0.0001;
     private IntegralCalculator calc;
