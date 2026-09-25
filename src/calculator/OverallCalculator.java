@@ -108,7 +108,7 @@ public class OverallCalculator
             System.out.println(
                 "Welcome to myFieldCalc! Press 1 for 4-function"
                     + " calculator, 2 for polynomial calculator, 3 to exit, "
-                    + "4 for Derivative Calculator, "
+                    + "\n 4 for Derivative Calculator, "
                     + "and 5 for Integral Calculator: ");
             int menuChoice = 0;
             if (!scanner.hasNextLine())
