@@ -8,7 +8,8 @@ package calculator;
  * @version Sep 25, 2026
  */
 
-public class DerivativeCalculator {
+public class DerivativeCalculator
+{
     // ~ Fields ................................................................
 
     // ~ Constructors ..........................................................
@@ -27,7 +28,8 @@ public class DerivativeCalculator {
      * @throws ArithmeticException
      *             when the polynomial couldn't evaluate
      */
-    public double evaluatePolynomial(Polynomial poly, double x) {
+    public double evaluatePolynomial(Polynomial poly, double x) 
+    {
         if (poly == null) {
             throw new IllegalArgumentException("Polynomial can't be null");
         }
@@ -38,7 +40,6 @@ public class DerivativeCalculator {
         double[] coefficients = poly.toCoefficientArray();
         double result = 0.0;
 
-<<<<<<< HEAD
         for (int i = 0; i < coefficients.length; i++)
         {
             result += coefficients[i] * Math.pow(x, i);
@@ -46,17 +47,18 @@ public class DerivativeCalculator {
 
         if (Double.isNaN(result) || Double.isInfinite(result))
         {
-=======
         for (int i = 0; i < coefficients.length; i++) {
             result += coefficients[i] * Math.pow(x, i);
         }
 
         if (Double.isNaN(result) || Double.isInfinite(result)) {
->>>>>>> 2f563d34805b578e9f216b253a6104baeecdab82
             throw new ArithmeticException(
                 "Evaluation resulted in an invalid value.");
         }
+        
         return result;
+        }
+        
     }
 
 
@@ -76,26 +78,6 @@ public class DerivativeCalculator {
      * @throws ArithmeticException
      *             when the polynomial couldn't evaluate
      */
-    public double evaluateDerivative(Polynomial poly, double x) {
-        if (poly == null) {
-            throw new IllegalArgumentException("Polynomial cannot be null.");
-        }
-
-        if (Double.isNaN(x) || Double.isInfinite(x)) {
-            throw new IllegalArgumentException("Invalid x value.");
-        }
-
-        double[] coefficients = poly.toCoefficientArray();
-        double result = 0.0;
-
-        for (int i = 1; i < coefficients.length; i++) {
-            result += i * coefficients[i] * Math.pow(x, i - 1);
-        }
-
-<<<<<<< HEAD
-    @throw IllegalArgumentException when the input is bad
-    @throw ArithmeticException when the polynomial couldn't evaluate
-    */
     public double evaluateDerivative(Polynomial poly, double x)
     {
     if (poly == null)
@@ -125,13 +107,12 @@ public class DerivativeCalculator {
     "Derivative resulted in an invalid value.");
     }
     return result;
-=======
         if (Double.isNaN(result) || Double.isInfinite(result)) {
             throw new ArithmeticException(
                 "Derivative resulted in an invalid value.");
         }
         return result;
->>>>>>> 2f563d34805b578e9f216b253a6104baeecdab82
+
     }
 
 }
