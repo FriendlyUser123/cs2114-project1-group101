@@ -20,6 +20,7 @@ public class IntegralCalculatorTest extends student.TestCase
     /**
      * Creates a calculator and polynomial before each test.
      */
+    @Before
     public void setUp()
     {
         calc = new IntegralCalculator();
@@ -30,6 +31,7 @@ public class IntegralCalculatorTest extends student.TestCase
     /**
      * Tests construction of an IntegralCalculator.
      */
+    @Test
     public void testIntegralCalculator()
     {
         IntegralCalculator testCalc =
@@ -42,6 +44,7 @@ public class IntegralCalculatorTest extends student.TestCase
     /**
      * Tests evaluating a polynomial at an x value.
      */
+    @Test
     public void testEvaluatePolynomial()
     {
         // f(x) = 3x^2 - 2x + 5
@@ -75,6 +78,7 @@ public class IntegralCalculatorTest extends student.TestCase
     /**
      * Tests normal Simpson's Rule behavior.
      */
+    @Test
     public void testSimpsonsRuleNormal()
     {
         // f(x) = x^2
@@ -132,6 +136,7 @@ public class IntegralCalculatorTest extends student.TestCase
     /**
      * Tests rejection of a null polynomial.
      */
+    @Test
     public void testNullPolynomial()
     {
         IllegalArgumentException exception = null;
@@ -156,6 +161,7 @@ public class IntegralCalculatorTest extends student.TestCase
     /**
      * Tests every invalid-bound condition.
      */
+    @Test
     public void testInvalidBounds()
     {
         poly.addTerm(1.0, 2);
@@ -241,6 +247,7 @@ public class IntegralCalculatorTest extends student.TestCase
     /**
      * Tests invalid numbers of Simpson intervals.
      */
+    @Test
     public void testInvalidIntervals()
     {
         poly.addTerm(1.0, 2);
@@ -288,6 +295,7 @@ public class IntegralCalculatorTest extends student.TestCase
     /**
      * Tests an integral whose result becomes positive infinity.
      */
+    @Test
     public void testInfiniteResult()
     {
         /*
@@ -324,6 +332,7 @@ public class IntegralCalculatorTest extends student.TestCase
     /**
      * Tests an integral whose intermediate result becomes NaN.
      */
+    @Test
     public void testNaNResult()
     {
         /*
