@@ -1,5 +1,6 @@
 package calculator;
 
+import java.text.DecimalFormat;
 import java.util.Scanner;
 
 /**
@@ -15,6 +16,25 @@ import java.util.Scanner;
 public class OverallCalculator {
 
     // ~ Fields ................................................................
+
+    /** The largest polynomial degree a user may enter. */
+    private static final int MAX_DEGREE = 100;
+
+    /** The most characters a typed number may have. */
+    private static final int MAX_INPUT_LENGTH = 100;
+
+    /** Menu choice that opens the four-function calculator. */
+    private static final int FOUR_FUNCTION_CHOICE = 1;
+
+    /** Menu choice that opens the polynomial calculator. */
+    private static final int POLYNOMIAL_CHOICE = 2;
+
+    /** Menu choice that exits the program. */
+    private static final int EXIT_CHOICE = 3;
+
+    /** Rounds results for display; the stored answer keeps full precision. */
+    private static final DecimalFormat RESULT_FORMAT = new DecimalFormat(
+        "#.######");
 
     /** Handles +, -, *, / on decimal numbers and remembers the last answer. */
     private FourFunctionCalculator fourFunctionCalc;
@@ -51,6 +71,7 @@ public class OverallCalculator {
 
     // ~ Program entry point ...................................................
 
+
     /**
      * Starts the calculator.
      *
@@ -63,43 +84,41 @@ public class OverallCalculator {
 
     // ~ Menu flow .............................................................
 
+
     /**
      * Runs the main menu loop: 1 = four-function, 2 = polynomial, 3 = exit.
      * Bad menu input shows an error and asks again.
      */
     public void run() {
         boolean menuLoop = true;
-        while (menuLoop)
-        {
+        while (menuLoop) {
             System.out.println("Welcome to myFieldCalc! Press 1 for 4-function"
                 + " calculator, 2 for polynomial calculator, and 3 to exit: ");
             int menuChoice = 0;
-            
-            try
-            {
+            if (!scanner.hasNextLine()) {
+                return;
+            }
+
+            try {
                 menuChoice = this.parseMenuChoice(scanner.nextLine());
             }
-            catch (IllegalArgumentException e)
-            {
-                System.out.println("Try again");
+            catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
             }
-            
-            if (menuChoice == 1)
-            {
+
+            if (menuChoice == FOUR_FUNCTION_CHOICE) {
                 System.out.println("Starting 4-Function Calculator...");
                 this.runFourFunctionCalculator();
                 System.out.println("Operation complete, you are being "
                     + "directed back to the main menu...");
             }
-            else if (menuChoice == 2)
-            {
+            else if (menuChoice == POLYNOMIAL_CHOICE) {
                 System.out.println("Starting Polynomial Calculator...");
                 this.runPolynomialCalculator();
                 System.out.println("Operation complete, you are being "
                     + "directed back to the main menu...");
             }
-            else if (menuChoice == 3)
-            {
+            else if (menuChoice == EXIT_CHOICE) {
                 System.out.println("Goodbye!");
                 scanner.close();
                 menuLoop = false;
@@ -121,131 +140,112 @@ public class OverallCalculator {
         double lastResult = 0.0;
         boolean calcRunning = true;
         fourFunctionCalc = new FourFunctionCalculator();
-        while (calcRunning)
-        {
+        while (calcRunning) {
             boolean gettingValue1 = true;
             boolean gettingValue2 = true;
             boolean gettingOperator = true;
-            
+
             double value1 = 0.0;
             double value2 = 0.0;
             char operator = ' ';
             double result = 0.0;
-            
-            while (gettingValue1)
-            {
+
+            while (gettingValue1) {
                 System.out.println("Enter value 1 (Enter ANS for "
                     + "last result, Enter EXIT to go back to main menu): ");
-                
-                if (!scanner.hasNextLine())
-                {
+
+                if (!scanner.hasNextLine()) {
                     return lastResult;
                 }
-                
+
                 String in = scanner.nextLine();
-                if (in.equalsIgnoreCase("EXIT"))
-                {
+                if (in.equalsIgnoreCase("EXIT")) {
                     calcRunning = false;
                     break;
                 }
-                try
-                {
+                try {
                     value1 = this.parseBasicValue(in);
                     gettingValue1 = false;
                 }
-                catch (IllegalArgumentException e)
-                {
-                    System.out.println("Try again");
+                catch (IllegalArgumentException e) {
+                    System.out.println(e.getMessage());
                 }
             }
-            if (!calcRunning)
-            {
+            if (!calcRunning) {
                 break;
             }
-            while (gettingOperator)
-            {
+            while (gettingOperator) {
                 System.out.println("Enter operator: ");
-                try
-                {
+                if (!scanner.hasNextLine()) {
+                    return lastResult;
+                }
+                try {
                     operator = this.parseBasicOperator(scanner.nextLine());
                     gettingOperator = false;
                 }
-                catch (IllegalArgumentException e)
-                {
-                    System.out.println("Try again");
+                catch (IllegalArgumentException e) {
+                    System.out.println(e.getMessage());
                 }
-                
+
             }
-            while (gettingValue2)
-            {
+            while (gettingValue2) {
                 System.out.println("Enter value 2 (Enter ANS for "
                     + "last result): ");
-                try
-                {
+                if (!scanner.hasNextLine()) {
+                    return lastResult;
+                }
+                try {
                     value2 = this.parseBasicValue(scanner.nextLine());
                     gettingValue2 = false;
                 }
-                catch (IllegalArgumentException e)
-                {
-                    System.out.println("Try again");
+                catch (IllegalArgumentException e) {
+                    System.out.println(e.getMessage());
                 }
-                
+
             }
-            
-            if (operator == '+')
-            {
-                try
-                {
+
+            if (operator == '+') {
+                try {
                     result = fourFunctionCalc.add(value1, value2);
                 }
-                catch (Exception e)
-                {
-                    System.out.println("try again");
+                catch (IllegalArgumentException | ArithmeticException e) {
+                    System.out.println(e.getMessage());
                     continue;
                 }
             }
-            else if (operator == '-')
-            {
-                try
-                {
+            else if (operator == '-') {
+                try {
                     result = fourFunctionCalc.subtract(value1, value2);
                 }
-                catch (Exception e)
-                {
-                    System.out.println("try again");
+                catch (IllegalArgumentException | ArithmeticException e) {
+                    System.out.println(e.getMessage());
                     continue;
                 }
             }
-            else if (operator == '*')
-            {
-                try
-                {
+            else if (operator == '*') {
+                try {
                     result = fourFunctionCalc.multiply(value1, value2);
                 }
-                catch (Exception e)
-                {
-                    System.out.println("try again");
+                catch (IllegalArgumentException | ArithmeticException e) {
+                    System.out.println(e.getMessage());
                     continue;
                 }
             }
-            else if (operator == '/')
-            {
-                try
-                {
+            else if (operator == '/') {
+                try {
                     result = fourFunctionCalc.divide(value1, value2);
                 }
-                catch (Exception e)
-                {
-                    System.out.println("try again");
+                catch (IllegalArgumentException | ArithmeticException e) {
+                    System.out.println(e.getMessage());
                     continue;
                 }
             }
-            
-            System.out.println("Result: " + Double.toString(result));
+
+            System.out.println("Result: " + RESULT_FORMAT.format(result));
             lastResult = result;
-            
+
         }
-        
+
         return lastResult;
     }
 
@@ -263,71 +263,60 @@ public class OverallCalculator {
         polyCalc = new PolynomialCalculator();
         Polynomial result = new Polynomial();
         boolean operating = true;
-        
-        while (operating)
-        {
+
+        while (operating) {
             boolean gettingOperator = true;
             char operator = ' ';
-            
-            
+
             System.out.println("Follow the steps for polynomial 1: ");
             Polynomial poly1 = getPolynomialFromUser();
             System.out.println("Polynomial1: " + poly1.toString());
             System.out.println("Follow the steps for polynomial 2: ");
             Polynomial poly2 = getPolynomialFromUser();
             System.out.println("Polynomial2: " + poly2.toString());
-            
-            while (gettingOperator)
-            {
+
+            while (gettingOperator) {
                 System.out.println("Enter polynomial operation: ");
-                try
-                {
+                if (!scanner.hasNextLine()) {
+                    return result;
+                }
+                try {
                     operator = this.parsePolynomialOperator(scanner.nextLine());
                     gettingOperator = false;
                 }
-                catch (IllegalArgumentException e)
-                {
-                    System.out.println("Try again");
-                }   
+                catch (IllegalArgumentException e) {
+                    System.out.println(e.getMessage());
+                }
             }
-            
-            if (operator == '+')
-            {
-                try
-                {
+
+            if (operator == '+') {
+                try {
                     result = polyCalc.add(poly1, poly2);
                 }
-                catch (Exception e)
-                {
-                    System.out.println("try again");
+                catch (IllegalArgumentException e) {
+                    System.out.println(e.getMessage());
                     continue;
                 }
             }
-            else if (operator == '-')
-            {
-                try
-                {
+            else if (operator == '-') {
+                try {
                     result = polyCalc.subtract(poly1, poly2);
                 }
-                catch (Exception e)
-                {
-                    System.out.println("try again");
+                catch (IllegalArgumentException e) {
+                    System.out.println(e.getMessage());
                     continue;
                 }
             }
-            else if (operator == '*')
-            {
-                try
-                {
+            else if (operator == '*') {
+                try {
                     result = polyCalc.multiply(poly1, poly2);
                 }
-                catch (Exception e)
-                {
-                    System.out.println("try again");
+                catch (IllegalArgumentException e) {
+                    System.out.println(e.getMessage());
                     continue;
                 }
             }
-            
+
             operating = false;
         }
         System.out.println("The resulting polynomial is: " + result.toString());
@@ -349,63 +338,60 @@ public class OverallCalculator {
     public Polynomial getPolynomialFromUser() {
         boolean gettingPoly = true;
         Polynomial userPoly = new Polynomial();
-        while (gettingPoly)
-        {
+        while (gettingPoly) {
             boolean gettingDegree = true;
             int degree = 0;
-            
-            while (gettingDegree)
-            {
+
+            while (gettingDegree) {
                 System.out.println("Enter the order of polynomial: ");
-                try
-                {
+                if (!scanner.hasNextLine()) {
+                    return userPoly;
+                }
+                try {
                     degree = this.parseDegree(scanner.nextLine());
                     gettingDegree = false;
                 }
-                catch (IllegalArgumentException e)
-                {
-                    System.out.println("try again");
+                catch (IllegalArgumentException e) {
+                    System.out.println(e.getMessage());
                 }
             }
-            
-            for (int i = degree; i >= 0; i--)
-            {
+
+            for (int i = degree; i >= 0; i--) {
                 boolean gettingTerm = true;
                 double coeff = 0.0;
-                while (gettingTerm)
-                {
+                while (gettingTerm) {
                     System.out.println("Enter the coefficient of term with "
                         + "degree " + Integer.toString(i) + ": ");
-                    
+
+                    if (!scanner.hasNextLine()) {
+                        return userPoly;
+                    }
                     String in = scanner.nextLine();
-                    
-                    if (in.isEmpty())
-                    {
+
+                    if (in.isEmpty()) {
                         coeff = 0.0;
                         gettingTerm = false;
                     }
-                    else
-                    {
-                        try
-                        {
+                    else {
+                        try {
                             coeff = parseValidDouble(in);
                             gettingTerm = false;
                         }
-                        catch (IllegalArgumentException e)
-                        {
-                            System.out.println("try again");
+                        catch (IllegalArgumentException e) {
+                            System.out.println(e.getMessage());
                         }
                     }
                 }
                 userPoly.addTerm(coeff, i);
             }
-            
+
             gettingPoly = false;
         }
         return userPoly;
     }
 
     // ~ Input validation (parse methods) ......................................
+
 
     /**
      * Turns text into a polynomial degree.
@@ -420,19 +406,18 @@ public class OverallCalculator {
      */
     public int parseDegree(String input) {
         int degree;
-        try
-        {
+        try {
             degree = Integer.parseInt(input);
         }
-        catch (NumberFormatException e)
-        {
-            throw new IllegalArgumentException("Entry is invalid, try again");
+        catch (NumberFormatException e) {
+            throw new IllegalArgumentException(
+                "The degree must be a whole number, like 3.");
         }
-        if (degree < 0 || degree > 100)
-        {
-            throw new IllegalArgumentException("Degree is out of bounds");
+        if (degree < 0 || degree > MAX_DEGREE) {
+            throw new IllegalArgumentException("The degree must be from 0 to "
+                + MAX_DEGREE + ".");
         }
-        
+
         return degree;
     }
 
@@ -450,23 +435,22 @@ public class OverallCalculator {
      */
     public double parseValidDouble(String input) {
         double validDouble;
-        if (input.length() > 100)
-        {
-            throw new IllegalArgumentException("Over character limit");
+        if (input.length() > MAX_INPUT_LENGTH) {
+            throw new IllegalArgumentException("Numbers can be at most "
+                + MAX_INPUT_LENGTH + " characters long.");
         }
-        try
-        {
+        try {
             validDouble = Double.parseDouble(input);
         }
-        catch (NumberFormatException e)
-        {
-            throw new IllegalArgumentException("Entry is invalid, try again");
+        catch (NumberFormatException e) {
+            throw new IllegalArgumentException(
+                "Enter a number, like 5 or -2.5.");
         }
-        if (Double.isNaN(validDouble) || Double.isInfinite(validDouble) )
-        {
-            throw new IllegalArgumentException("Entry is invalid, try again");
+        if (Double.isNaN(validDouble) || Double.isInfinite(validDouble)) {
+            throw new IllegalArgumentException(
+                "That number is too large or is not a number.");
         }
-        
+
         return validDouble;
     }
 
@@ -483,12 +467,12 @@ public class OverallCalculator {
      *             if the text is not exactly one of those operators
      */
     public char parseBasicOperator(String input) {
-        if (!(input.equals("+") || input.equals("-") || input.equals("*") 
-            || input.equals("/")))
-        {
-            throw new IllegalArgumentException("invalid operator input");
+        if (!(input.equals("+") || input.equals("-") || input.equals("*")
+            || input.equals("/"))) {
+            throw new IllegalArgumentException(
+                "Enter one operator: +, -, *, or /.");
         }
-        
+
         char operator = input.charAt(0);
         return operator;
     }
@@ -507,15 +491,14 @@ public class OverallCalculator {
      *             if the text is invalid, or is "ANS" with nothing stored
      */
     public double parseBasicValue(String input) {
-        if (input.equalsIgnoreCase("ANS"))
-        {
-            if (fourFunctionCalc.hasLast())
-            {
+        if (input.equalsIgnoreCase("ANS")) {
+            if (fourFunctionCalc.hasLast()) {
                 return fourFunctionCalc.getLast();
             }
-            throw new IllegalArgumentException("No previous answer");
+            throw new IllegalArgumentException(
+                "There is no previous answer yet, so enter a number.");
         }
-        
+
         return this.parseValidDouble(input);
     }
 
@@ -533,11 +516,11 @@ public class OverallCalculator {
      *             if the text is not one of those operators
      */
     public char parsePolynomialOperator(String input) {
-        if (!(input.equals("+") || input.equals("-") || input.equals("*")))
-        {
-            throw new IllegalArgumentException("invalid operator input");
+        if (!(input.equals("+") || input.equals("-") || input.equals("*"))) {
+            throw new IllegalArgumentException(
+                "Enter one operator: +, -, or *.");
         }
-        
+
         char operator = input.charAt(0);
         return operator;
     }
@@ -555,11 +538,10 @@ public class OverallCalculator {
      *             if the text is not 1, 2, or 3
      */
     public int parseMenuChoice(String input) {
-        if (!(input.equals("1") || input.equals("2") || input.equals("3")))
-        {
-            throw new IllegalArgumentException("invalid menu choice input");
+        if (!(input.equals("1") || input.equals("2") || input.equals("3"))) {
+            throw new IllegalArgumentException("Enter 1, 2, or 3.");
         }
-        
+
         int choice = Integer.parseInt(input);
         return choice;
     }

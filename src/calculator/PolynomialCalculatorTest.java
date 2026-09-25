@@ -1,9 +1,5 @@
 package calculator;
 
-import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.Test;
-
 /**
  * Tests for {@link PolynomialCalculator}. Cases come from the Deliverable 2
  * test plan.
@@ -11,8 +7,7 @@ import org.junit.Test;
  * @author Aditya Banerjee (adityab7)
  * @version 2026.09.25
  */
-public class PolynomialCalculatorTest
-{
+public class PolynomialCalculatorTest extends student.TestCase {
     private static final double DELTA = 0.0001;
     private PolynomialCalculator calc;
     private Polynomial poly1;
@@ -21,8 +16,7 @@ public class PolynomialCalculatorTest
     /**
      * Sets up normal calculator and polynomial objects.
      */
-    public void setUp()
-    {
+    public void setUp() {
         calc = new PolynomialCalculator();
 
         poly1 = new Polynomial();
@@ -33,9 +27,7 @@ public class PolynomialCalculatorTest
     /**
      * Tests the constructor.
      */
-    @Test
-    public void testPolynomialCalculator()
-    {
+    public void testPolynomialCalculator() {
         PolynomialCalculator testCalc = new PolynomialCalculator();
 
         assertNotNull(testCalc);
@@ -45,9 +37,7 @@ public class PolynomialCalculatorTest
     /**
      * Tests checking valid and null polynomials.
      */
-    @Test
-    public void testCheckPolys()
-    {
+    public void testCheckPolys() {
         assertTrue(calc.checkPolys(poly1, poly2));
 
         // First polynomial null
@@ -64,9 +54,7 @@ public class PolynomialCalculatorTest
     /**
      * Tests polynomial addition.
      */
-    @Test
-    public void testAdd()
-    {
+    public void testAdd() {
         // poly1 = 3x^2 + 2x
         poly1.addTerm(3.0, 2);
         poly1.addTerm(2.0, 1);
@@ -118,12 +106,10 @@ public class PolynomialCalculatorTest
         // but is necessary to cover the validation branch.
         IllegalArgumentException exception = null;
 
-        try
-        {
+        try {
             calc.add(null, poly2);
         }
-        catch (IllegalArgumentException e)
-        {
+        catch (IllegalArgumentException e) {
             exception = e;
         }
 
@@ -134,9 +120,7 @@ public class PolynomialCalculatorTest
     /**
      * Tests polynomial subtraction.
      */
-    @Test
-    public void testSubtract()
-    {
+    public void testSubtract() {
         // poly1 = 5x^2 + 3x
         poly1.addTerm(5.0, 2);
         poly1.addTerm(3.0, 1);
@@ -188,12 +172,10 @@ public class PolynomialCalculatorTest
 
         IllegalArgumentException exception = null;
 
-        try
-        {
+        try {
             calc.subtract(poly1, null);
         }
-        catch (IllegalArgumentException e)
-        {
+        catch (IllegalArgumentException e) {
             exception = e;
         }
 
@@ -204,9 +186,7 @@ public class PolynomialCalculatorTest
     /**
      * Tests polynomial multiplication.
      */
-    @Test
-    public void testMultiply()
-    {
+    public void testMultiply() {
         // poly1 = x + 2
         poly1.addTerm(1.0, 1);
         poly1.addTerm(2.0, 0);
@@ -236,12 +216,10 @@ public class PolynomialCalculatorTest
 
         IllegalArgumentException exception = null;
 
-        try
-        {
+        try {
             calc.multiply(null, poly2);
         }
-        catch (IllegalArgumentException e)
-        {
+        catch (IllegalArgumentException e) {
             exception = e;
         }
 

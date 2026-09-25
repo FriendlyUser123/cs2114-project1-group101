@@ -1,16 +1,12 @@
 package calculator;
 
-import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.Test;
-
 /**
  * Tests for {@link Term}. Cases come from the Deliverable 2 test plan.
  *
  * @author Aditya Banerjee (adityab7)
  * @version 2026.09.25
  */
-public class TermTest {
+public class TermTest extends student.TestCase {
 
     /** Tolerance for comparing doubles. */
     private static final double DELTA = 1e-9;
@@ -21,7 +17,6 @@ public class TermTest {
     /**
      * Runs before every test.
      */
-    @Before
     public void setUp() {
         term = new Term(5.0, 3);
     }
@@ -30,9 +25,7 @@ public class TermTest {
     /**
      * Tests the Term constructor.
      */
-    @Test
-    public void testTerm()
-    {
+    public void testTerm() {
         Term testTerm = new Term(-4.5, 2);
 
         assertEquals(-4.5, testTerm.getCoefficient(), DELTA);
@@ -43,20 +36,16 @@ public class TermTest {
     /**
      * Tests setting a valid coefficient and rejecting invalid coefficients.
      */
-    @Test
-    public void testSetCoefficient()
-    {
+    public void testSetCoefficient() {
         term.setCoefficient(-7.25);
         assertEquals(-7.25, term.getCoefficient(), DELTA);
 
         IllegalArgumentException nanException = null;
 
-        try
-        {
+        try {
             term.setCoefficient(Double.NaN);
         }
-        catch (IllegalArgumentException e)
-        {
+        catch (IllegalArgumentException e) {
             nanException = e;
         }
 
@@ -65,12 +54,10 @@ public class TermTest {
 
         IllegalArgumentException infinityException = null;
 
-        try
-        {
+        try {
             term.setCoefficient(Double.POSITIVE_INFINITY);
         }
-        catch (IllegalArgumentException e)
-        {
+        catch (IllegalArgumentException e) {
             infinityException = e;
         }
 
@@ -82,9 +69,7 @@ public class TermTest {
     /**
      * Tests setting valid and invalid degrees.
      */
-    @Test
-    public void testSetDegree()
-    {
+    public void testSetDegree() {
         term.setDegree(4);
         assertEquals(4, term.getDegree());
 
@@ -93,12 +78,10 @@ public class TermTest {
 
         IllegalArgumentException exception = null;
 
-        try
-        {
+        try {
             term.setDegree(-2);
         }
-        catch (IllegalArgumentException e)
-        {
+        catch (IllegalArgumentException e) {
             exception = e;
         }
 
@@ -110,9 +93,7 @@ public class TermTest {
     /**
      * Tests getting the coefficient.
      */
-    @Test
-    public void testGetCoefficient()
-    {
+    public void testGetCoefficient() {
         assertEquals(5.0, term.getCoefficient(), DELTA);
 
         term.setCoefficient(-2.75);
@@ -123,9 +104,7 @@ public class TermTest {
     /**
      * Tests getting the degree.
      */
-    @Test
-    public void testGetDegree()
-    {
+    public void testGetDegree() {
         assertEquals(3, term.getDegree());
 
         term.setDegree(10);
