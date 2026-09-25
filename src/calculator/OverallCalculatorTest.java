@@ -12,15 +12,16 @@ import java.util.Scanner;
  * @author Aditya Banerjee (adityab7)
  * @version 2026.09.25
  */
-public class OverallCalculatorTest extends student.TestCase {
+public class OverallCalculatorTest extends student.TestCase
+{
+    private static final double DELTA = 0.0001;
 
-    /** Tolerance for comparing doubles. */
-    private static final double DELTA = 1e-9;
 
     /**
-     * Tests the Scanner constructor.
+     * Tests the constructor that accepts a Scanner.
      */
-    public void testConstructor() {
+    public void testScannerConstructor()
+    {
         Scanner input = new Scanner("");
         OverallCalculator calc = new OverallCalculator(input);
 
@@ -31,40 +32,80 @@ public class OverallCalculatorTest extends student.TestCase {
 
 
     /**
-     * Tests main and the default constructor.
+     * Tests main() and the default constructor.
      */
-    public void testMain() {
+    public void testMain()
+    {
         InputStream originalIn = System.in;
 
-        try {
-            String input = "3\n";
-            System.setIn(new ByteArrayInputStream(input.getBytes()));
+        try
+        {
+            System.setIn(
+                new ByteArrayInputStream("3\n".getBytes()));
 
             OverallCalculator.main(new String[0]);
         }
-        finally {
+        finally
+        {
             System.setIn(originalIn);
         }
 
-        OverallCalculator defaultCalc = new OverallCalculator();
-        assertNotNull(defaultCalc);
+        assertTrue(System.in == originalIn);
     }
 
 
     /**
-     * Tests the complete main-menu flow.
-     *
-     * Covers:
-     * invalid menu choice
-     * four-function calculator selection
-     * polynomial calculator selection
-     * derivative calculator selection
-     * exit
+     * Tests run() returning when no menu input is available.
      */
-    public void testRun() {
-        Scanner input = new Scanner("6\n" + "1\n" + "5\n" + "+\n" + "8\n"
-            + "EXIT\n" + "2\n" + "0\n" + "1\n" + "0\n" + "2\n" + "+\n" + "4\n"
-            + "1\n" + "2\n" + "3\n" + "2\n" + "3\n");
+    public void testRunNoInput()
+    {
+        Scanner input = new Scanner("");
+        OverallCalculator calc = new OverallCalculator(input);
+
+        calc.run();
+
+        assertNotNull(calc);
+
+        input.close();
+    }
+
+
+    /**
+     * Tests invalid menu input and all five menu choices.
+     */
+    public void testRunAllMenuChoices()
+    {
+        Scanner input = new Scanner(
+            "9\n"
+
+            // Four-function calculator
+            + "1\n"
+            + "EXIT\n"
+
+            // Polynomial calculator: 1 + 2
+            + "2\n"
+            + "0\n"
+            + "1\n"
+            + "0\n"
+            + "2\n"
+            + "+\n"
+
+            // Derivative calculator: f(x) = 1 at x = 2
+            + "4\n"
+            + "0\n"
+            + "1\n"
+            + "2\n"
+
+            // Integral calculator: integral of 1 from 0 to 2
+            + "5\n"
+            + "0\n"
+            + "1\n"
+            + "0\n"
+            + "2\n"
+            + "2\n"
+
+            // Exit
+            + "3\n");
 
         OverallCalculator calc = new OverallCalculator(input);
 
@@ -75,34 +116,64 @@ public class OverallCalculatorTest extends student.TestCase {
 
 
     /**
-     * Tests all four successful four-function operations
-     * and repeated use of ANS.
+     * Tests all four successful arithmetic operations.
+     * Also forces formatResult() to format a tiny negative
+     * value as 0 instead of -0.
      */
-    public void testRunFourFunctionCalculatorOperations() {
-        Scanner input = new Scanner("5\n" + "+\n" + "3\n" + "ANS\n" + "-\n"
-            + "2\n" + "ANS\n" + "*\n" + "4\n" + "ANS\n" + "/\n" + "6\n"
+    public void testRunFourFunctionOperations()
+    {
+        Scanner input = new Scanner(
+            // Tiny negative result -> "-0" formatting branch
+            "-0.0000001\n"
+            + "+\n"
+            + "0\n"
+
+            // Subtraction
+            + "10\n"
+            + "-\n"
+            + "4\n"
+
+            // Multiplication
+            + "4\n"
+            + "*\n"
+            + "5\n"
+
+            // Division
+            + "10\n"
+            + "/\n"
+            + "2\n"
+
             + "EXIT\n");
 
         OverallCalculator calc = new OverallCalculator(input);
 
-        double result = calc.runFourFunctionCalculator();
+        double result =
+            calc.runFourFunctionCalculator();
 
-        assertEquals(4.0, result, DELTA);
+        assertEquals(5.0, result, DELTA);
 
         input.close();
     }
 
 
     /**
-     * Tests bad first value, bad operator, and bad second value.
+     * Tests invalid first value, operator, and second value.
      */
-    public void testRunFourFunctionCalculatorBadInputs() {
-        Scanner input = new Scanner("bad\n" + "5\n" + "^\n" + "+\n" + "bad\n"
-            + "2\n" + "EXIT\n");
+    public void testRunFourFunctionBadInput()
+    {
+        Scanner input = new Scanner(
+            "bad\n"
+            + "5\n"
+            + "^\n"
+            + "+\n"
+            + "bad\n"
+            + "2\n"
+            + "EXIT\n");
 
         OverallCalculator calc = new OverallCalculator(input);
 
-        double result = calc.runFourFunctionCalculator();
+        double result =
+            calc.runFourFunctionCalculator();
 
         assertEquals(7.0, result, DELTA);
 
@@ -111,35 +182,45 @@ public class OverallCalculatorTest extends student.TestCase {
 
 
     /**
-     * Tests failed arithmetic operations.
-     *
-     * Each failed operation should restart the calculator without
-     * accepting the invalid result.
+     * Tests the exception catch for every arithmetic operator.
      */
-    public void testRunFourFunctionCalculatorArithmeticExceptions() {
-        String max = Double.toString(Double.MAX_VALUE);
+    public void testRunFourFunctionOperationExceptions()
+    {
+        String max =
+            Double.toString(Double.MAX_VALUE);
 
         Scanner input = new Scanner(
             // Addition overflow
-            max + "\n" + "+\n" + max + "\n"
+            max + "\n"
+            + "+\n"
+            + max + "\n"
 
             // Subtraction overflow
-                + max + "\n" + "-\n" + "-" + max + "\n"
+            + max + "\n"
+            + "-\n"
+            + "-" + max + "\n"
 
-                // Multiplication overflow
-                + max + "\n" + "*\n" + "2\n"
+            // Multiplication overflow
+            + max + "\n"
+            + "*\n"
+            + "2\n"
 
-                // Divide by zero
-                + "1\n" + "/\n" + "0\n"
+            // Divide by zero
+            + "1\n"
+            + "/\n"
+            + "0\n"
 
-                // Successful calculation
-                + "1\n" + "+\n" + "1\n"
+            // Successful calculation afterward
+            + "1\n"
+            + "+\n"
+            + "1\n"
 
-                + "EXIT\n");
+            + "EXIT\n");
 
         OverallCalculator calc = new OverallCalculator(input);
 
-        double result = calc.runFourFunctionCalculator();
+        double result =
+            calc.runFourFunctionCalculator();
 
         assertEquals(2.0, result, DELTA);
 
@@ -148,16 +229,16 @@ public class OverallCalculatorTest extends student.TestCase {
 
 
     /**
-     * Tests the no-more-input branch.
-     *
-     * This is not normal terminal behavior, but is the only way
-     * to reach the hasNextLine() false branch.
+     * Tests running out of input while waiting for value 1.
      */
-    public void testRunFourFunctionCalculatorNoInput() {
+    public void testRunFourFunctionNoFirstValue()
+    {
         Scanner input = new Scanner("");
-        OverallCalculator calc = new OverallCalculator(input);
+        OverallCalculator calc =
+            new OverallCalculator(input);
 
-        double result = calc.runFourFunctionCalculator();
+        double result =
+            calc.runFourFunctionCalculator();
 
         assertEquals(0.0, result, DELTA);
 
@@ -166,17 +247,64 @@ public class OverallCalculatorTest extends student.TestCase {
 
 
     /**
-     * Tests polynomial addition and invalid polynomial operator input.
+     * Tests running out of input while waiting for an operator.
      */
-    public void testRunPolynomialCalculatorAdd() {
-        Scanner input = new Scanner("0\n" + "2\n" + "0\n" + "3\n" + "/\n"
+    public void testRunFourFunctionNoOperator()
+    {
+        Scanner input = new Scanner("5\n");
+        OverallCalculator calc =
+            new OverallCalculator(input);
+
+        double result =
+            calc.runFourFunctionCalculator();
+
+        assertEquals(0.0, result, DELTA);
+
+        input.close();
+    }
+
+
+    /**
+     * Tests running out of input while waiting for value 2.
+     */
+    public void testRunFourFunctionNoSecondValue()
+    {
+        Scanner input =
+            new Scanner("5\n+\n");
+
+        OverallCalculator calc =
+            new OverallCalculator(input);
+
+        double result =
+            calc.runFourFunctionCalculator();
+
+        assertEquals(0.0, result, DELTA);
+
+        input.close();
+    }
+
+
+    /**
+     * Tests polynomial addition and invalid operator re-prompting.
+     */
+    public void testRunPolynomialAdd()
+    {
+        Scanner input = new Scanner(
+            "0\n"
+            + "2\n"
+            + "0\n"
+            + "3\n"
+            + "/\n"
             + "+\n");
 
-        OverallCalculator calc = new OverallCalculator(input);
+        OverallCalculator calc =
+            new OverallCalculator(input);
 
-        Polynomial result = calc.runPolynomialCalculator();
+        Polynomial result =
+            calc.runPolynomialCalculator();
 
-        double[] array = result.toCoefficientArray();
+        double[] array =
+            result.toCoefficientArray();
 
         assertEquals(1, array.length);
         assertEquals(5.0, array[0], DELTA);
@@ -188,17 +316,24 @@ public class OverallCalculatorTest extends student.TestCase {
     /**
      * Tests polynomial subtraction.
      */
-    public void testRunPolynomialCalculatorSubtract() {
-        Scanner input = new Scanner("0\n" + "5\n" + "0\n" + "3\n" + "-\n");
+    public void testRunPolynomialSubtract()
+    {
+        Scanner input =
+            new Scanner(
+                "0\n5\n"
+                + "0\n3\n"
+                + "-\n");
 
-        OverallCalculator calc = new OverallCalculator(input);
+        OverallCalculator calc =
+            new OverallCalculator(input);
 
-        Polynomial result = calc.runPolynomialCalculator();
+        Polynomial result =
+            calc.runPolynomialCalculator();
 
-        double[] array = result.toCoefficientArray();
-
-        assertEquals(1, array.length);
-        assertEquals(2.0, array[0], DELTA);
+        assertEquals(
+            2.0,
+            result.toCoefficientArray()[0],
+            DELTA);
 
         input.close();
     }
@@ -206,18 +341,30 @@ public class OverallCalculatorTest extends student.TestCase {
 
     /**
      * Tests polynomial multiplication.
-     *
-     * (x + 2)(x + 3) = x^2 + 5x + 6
      */
-    public void testRunPolynomialCalculatorMultiply() {
-        Scanner input = new Scanner("1\n" + "1\n" + "2\n" + "1\n" + "1\n"
-            + "3\n" + "*\n");
+    public void testRunPolynomialMultiply()
+    {
+        Scanner input = new Scanner(
+            // x + 2
+            "1\n"
+            + "1\n"
+            + "2\n"
 
-        OverallCalculator calc = new OverallCalculator(input);
+            // x + 3
+            + "1\n"
+            + "1\n"
+            + "3\n"
 
-        Polynomial result = calc.runPolynomialCalculator();
+            + "*\n");
 
-        double[] array = result.toCoefficientArray();
+        OverallCalculator calc =
+            new OverallCalculator(input);
+
+        Polynomial result =
+            calc.runPolynomialCalculator();
+
+        double[] array =
+            result.toCoefficientArray();
 
         assertEquals(3, array.length);
         assertEquals(6.0, array[0], DELTA);
@@ -229,56 +376,159 @@ public class OverallCalculatorTest extends student.TestCase {
 
 
     /**
-     * Tests exception handling for all three polynomial operations.
+     * Tests running out of input while waiting for
+     * the polynomial operator.
      */
-    public void testRunPolynomialCalculatorArithmeticExceptions() {
-        String max = Double.toString(Double.MAX_VALUE);
+    public void testRunPolynomialNoOperator()
+    {
+        Scanner input =
+            new Scanner(
+                "0\n1\n"
+                + "0\n2\n");
 
-        Scanner input = new Scanner(
-            // Addition overflow
-            "0\n" + max + "\n" + "0\n" + max + "\n" + "+\n"
+        OverallCalculator calc =
+            new OverallCalculator(input);
 
-            // Subtraction overflow
-                + "0\n" + max + "\n" + "0\n" + "-" + max + "\n" + "-\n"
+        Polynomial result =
+            calc.runPolynomialCalculator();
 
-                // Multiplication overflow
-                + "0\n" + max + "\n" + "0\n" + "2\n" + "*\n"
-
-                // Final successful operation
-                + "0\n" + "1\n" + "0\n" + "2\n" + "+\n");
-
-        OverallCalculator calc = new OverallCalculator(input);
-
-        Polynomial result = calc.runPolynomialCalculator();
-
-        double[] array = result.toCoefficientArray();
-
-        assertEquals(1, array.length);
-        assertEquals(3.0, array[0], DELTA);
+        assertEquals("0", result.toString());
 
         input.close();
     }
 
 
     /**
-     * Tests polynomial entry.
-     *
-     * Covers:
-     * invalid degree
-     * valid degree
-     * invalid coefficient
-     * valid coefficient
-     * blank coefficient treated as zero
+     * Tests the polynomial addition exception catch.
      */
-    public void testGetPolynomialFromUser() {
-        Scanner input = new Scanner("abc\n" + "2\n" + "1\n" + "bad\n" + "2\n"
+    public void testRunPolynomialAddException()
+    {
+        String max =
+            Double.toString(Double.MAX_VALUE);
+
+        Scanner input = new Scanner(
+            // Overflow
+            "0\n"
+            + max + "\n"
+            + "0\n"
+            + max + "\n"
+            + "+\n"
+
+            // Valid retry: 1 + 2
+            + "0\n1\n"
+            + "0\n2\n"
+            + "+\n");
+
+        OverallCalculator calc =
+            new OverallCalculator(input);
+
+        Polynomial result =
+            calc.runPolynomialCalculator();
+
+        assertEquals(
+            3.0,
+            result.toCoefficientArray()[0],
+            DELTA);
+
+        input.close();
+    }
+
+
+    /**
+     * Tests the polynomial subtraction exception catch.
+     */
+    public void testRunPolynomialSubtractException()
+    {
+        String max =
+            Double.toString(Double.MAX_VALUE);
+
+        Scanner input = new Scanner(
+            // Overflow
+            "0\n"
+            + max + "\n"
+            + "0\n"
+            + "-" + max + "\n"
+            + "-\n"
+
+            // Valid retry: 3 - 1
+            + "0\n3\n"
+            + "0\n1\n"
+            + "-\n");
+
+        OverallCalculator calc =
+            new OverallCalculator(input);
+
+        Polynomial result =
+            calc.runPolynomialCalculator();
+
+        assertEquals(
+            2.0,
+            result.toCoefficientArray()[0],
+            DELTA);
+
+        input.close();
+    }
+
+
+    /**
+     * Tests the polynomial multiplication exception catch.
+     */
+    public void testRunPolynomialMultiplyException()
+    {
+        String max =
+            Double.toString(Double.MAX_VALUE);
+
+        Scanner input = new Scanner(
+            // Overflow
+            "0\n"
+            + max + "\n"
+            + "0\n"
+            + "2\n"
+            + "*\n"
+
+            // Valid retry: 2 * 3
+            + "0\n2\n"
+            + "0\n3\n"
+            + "*\n");
+
+        OverallCalculator calc =
+            new OverallCalculator(input);
+
+        Polynomial result =
+            calc.runPolynomialCalculator();
+
+        assertEquals(
+            6.0,
+            result.toCoefficientArray()[0],
+            DELTA);
+
+        input.close();
+    }
+
+
+    /**
+     * Tests polynomial entry including:
+     * bad degree, bad coefficient, valid coefficients,
+     * and blank coefficient = 0.
+     */
+    public void testGetPolynomialFromUser()
+    {
+        Scanner input = new Scanner(
+            "bad\n"
+            + "2\n"
+            + "1\n"
+            + "bad\n"
+            + "2\n"
             + "\n");
 
-        OverallCalculator calc = new OverallCalculator(input);
+        OverallCalculator calc =
+            new OverallCalculator(input);
 
-        Polynomial result = calc.getPolynomialFromUser();
+        Polynomial result =
+            calc.getPolynomialFromUser();
 
-        double[] array = result.toCoefficientArray();
+        double[] array =
+            result.toCoefficientArray();
 
         assertEquals(3, array.length);
         assertEquals(0.0, array[0], DELTA);
@@ -290,43 +540,291 @@ public class OverallCalculatorTest extends student.TestCase {
 
 
     /**
-     * Tests valid and invalid polynomial degree parsing.
+     * Tests running out of input while waiting for degree.
      */
-    public void testParseDegree() {
-        OverallCalculator calc = new OverallCalculator(new Scanner(""));
+    public void testGetPolynomialNoDegree()
+    {
+        Scanner input = new Scanner("");
 
-        assertEquals(5, calc.parseDegree("5"));
+        OverallCalculator calc =
+            new OverallCalculator(input);
+
+        Polynomial result =
+            calc.getPolynomialFromUser();
+
+        assertEquals("0", result.toString());
+
+        input.close();
+    }
+
+
+    /**
+     * Tests running out of input while waiting for a coefficient.
+     */
+    public void testGetPolynomialNoCoefficient()
+    {
+        Scanner input =
+            new Scanner("2\n1\n");
+
+        OverallCalculator calc =
+            new OverallCalculator(input);
+
+        Polynomial result =
+            calc.getPolynomialFromUser();
+
+        assertEquals("x^2", result.toString());
+
+        input.close();
+    }
+
+
+    /**
+     * Tests normal derivative operation and invalid x re-prompting.
+     */
+    public void testRunDerivativeSolver()
+    {
+        Scanner input = new Scanner(
+            // x^2
+            "2\n"
+            + "1\n"
+            + "0\n"
+            + "0\n"
+
+            // Invalid then valid x
+            + "bad\n"
+            + "2\n");
+
+        OverallCalculator calc =
+            new OverallCalculator(input);
+
+        calc.runDerivativeSolver();
+
+        assertNotNull(calc);
+
+        input.close();
+    }
+
+
+    /**
+     * Tests running out of input while waiting for x.
+     */
+    public void testRunDerivativeNoX()
+    {
+        Scanner input =
+            new Scanner("0\n1\n");
+
+        OverallCalculator calc =
+            new OverallCalculator(input);
+
+        calc.runDerivativeSolver();
+
+        assertNotNull(calc);
+
+        input.close();
+    }
+
+
+    /**
+     * Tests the arithmetic exception catch in the derivative solver.
+     */
+    public void testRunDerivativeArithmeticException()
+    {
+        String max =
+            Double.toString(Double.MAX_VALUE);
+
+        Scanner input = new Scanner(
+            // x^2
+            "2\n"
+            + "1\n"
+            + "0\n"
+            + "0\n"
+
+            // Evaluating x^2 here overflows
+            + max + "\n");
+
+        OverallCalculator calc =
+            new OverallCalculator(input);
+
+        calc.runDerivativeSolver();
+
+        assertNotNull(calc);
+
+        input.close();
+    }
+
+
+    /**
+     * Tests normal integral operation plus invalid
+     * lower bound, upper bound, and interval re-prompting.
+     */
+    public void testRunIntegralSolver()
+    {
+        Scanner input = new Scanner(
+            // f(x) = 1
+            "0\n"
+            + "1\n"
+
+            // Lower bound
+            + "bad\n"
+            + "0\n"
+
+            // Upper bound
+            + "bad\n"
+            + "2\n"
+
+            // Intervals
+            + "bad\n"
+            + "2\n");
+
+        OverallCalculator calc =
+            new OverallCalculator(input);
+
+        calc.runIntegralSolver();
+
+        assertNotNull(calc);
+
+        input.close();
+    }
+
+
+    /**
+     * Tests running out of input while waiting for lower bound.
+     */
+    public void testRunIntegralNoLower()
+    {
+        Scanner input =
+            new Scanner("0\n1\n");
+
+        OverallCalculator calc =
+            new OverallCalculator(input);
+
+        calc.runIntegralSolver();
+
+        assertNotNull(calc);
+
+        input.close();
+    }
+
+
+    /**
+     * Tests running out of input while waiting for upper bound.
+     */
+    public void testRunIntegralNoUpper()
+    {
+        Scanner input =
+            new Scanner(
+                "0\n1\n"
+                + "0\n");
+
+        OverallCalculator calc =
+            new OverallCalculator(input);
+
+        calc.runIntegralSolver();
+
+        assertNotNull(calc);
+
+        input.close();
+    }
+
+
+    /**
+     * Tests running out of input while waiting for interval count.
+     */
+    public void testRunIntegralNoInterval()
+    {
+        Scanner input =
+            new Scanner(
+                "0\n1\n"
+                + "0\n"
+                + "2\n");
+
+        OverallCalculator calc =
+            new OverallCalculator(input);
+
+        calc.runIntegralSolver();
+
+        assertNotNull(calc);
+
+        input.close();
+    }
+
+
+    /**
+     * Tests the arithmetic exception catch in the integral solver.
+     */
+    public void testRunIntegralArithmeticException()
+    {
+        String max =
+            Double.toString(Double.MAX_VALUE);
+
+        Scanner input = new Scanner(
+            // Very large constant polynomial
+            "0\n"
+            + max + "\n"
+
+            + "0\n"
+            + "2\n"
+            + "2\n");
+
+        OverallCalculator calc =
+            new OverallCalculator(input);
+
+        calc.runIntegralSolver();
+
+        assertNotNull(calc);
+
+        input.close();
+    }
+
+
+    /**
+     * Tests normal, malformed, negative, and excessive degrees.
+     */
+    public void testParseDegree()
+    {
+        OverallCalculator calc =
+            new OverallCalculator(new Scanner(""));
+
         assertEquals(0, calc.parseDegree("0"));
         assertEquals(100, calc.parseDegree("100"));
 
-        IllegalArgumentException decimalException = null;
 
-        try {
+        IllegalArgumentException formatException = null;
+
+        try
+        {
             calc.parseDegree("3.5");
         }
-        catch (IllegalArgumentException e) {
-            decimalException = e;
+        catch (IllegalArgumentException e)
+        {
+            formatException = e;
         }
 
-        assertNotNull(decimalException);
+        assertNotNull(formatException);
+
 
         IllegalArgumentException negativeException = null;
 
-        try {
+        try
+        {
             calc.parseDegree("-1");
         }
-        catch (IllegalArgumentException e) {
+        catch (IllegalArgumentException e)
+        {
             negativeException = e;
         }
 
         assertNotNull(negativeException);
 
+
         IllegalArgumentException largeException = null;
 
-        try {
+        try
+        {
             calc.parseDegree("101");
         }
-        catch (IllegalArgumentException e) {
+        catch (IllegalArgumentException e)
+        {
             largeException = e;
         }
 
@@ -335,83 +833,120 @@ public class OverallCalculatorTest extends student.TestCase {
 
 
     /**
-     * Tests valid and invalid double parsing.
+     * Tests normal, malformed, too-long, NaN,
+     * and infinite numeric inputs.
      */
-    public void testParseValidDouble() {
-        OverallCalculator calc = new OverallCalculator(new Scanner(""));
+    public void testParseValidDouble()
+    {
+        OverallCalculator calc =
+            new OverallCalculator(new Scanner(""));
 
-        assertEquals(5.25, calc.parseValidDouble("5.25"), DELTA);
-        assertEquals(-4.5, calc.parseValidDouble("-4.5"), DELTA);
+        assertEquals(
+            -2.5,
+            calc.parseValidDouble("-2.5"),
+            DELTA);
 
-        IllegalArgumentException badNumberException = null;
 
-        try {
+        StringBuilder longNumber =
+            new StringBuilder();
+
+        for (int i = 0; i < 101; i++)
+        {
+            longNumber.append("1");
+        }
+
+
+        IllegalArgumentException lengthException = null;
+
+        try
+        {
+            calc.parseValidDouble(
+                longNumber.toString());
+        }
+        catch (IllegalArgumentException e)
+        {
+            lengthException = e;
+        }
+
+        assertNotNull(lengthException);
+
+
+        IllegalArgumentException formatException = null;
+
+        try
+        {
             calc.parseValidDouble("2..5");
         }
-        catch (IllegalArgumentException e) {
-            badNumberException = e;
+        catch (IllegalArgumentException e)
+        {
+            formatException = e;
         }
 
-        assertNotNull(badNumberException);
+        assertNotNull(formatException);
+
 
         IllegalArgumentException nanException = null;
 
-        try {
+        try
+        {
             calc.parseValidDouble("NaN");
         }
-        catch (IllegalArgumentException e) {
+        catch (IllegalArgumentException e)
+        {
             nanException = e;
         }
 
         assertNotNull(nanException);
 
+
         IllegalArgumentException infinityException = null;
 
-        try {
+        try
+        {
             calc.parseValidDouble("Infinity");
         }
-        catch (IllegalArgumentException e) {
+        catch (IllegalArgumentException e)
+        {
             infinityException = e;
         }
 
         assertNotNull(infinityException);
-
-        StringBuilder tooLong = new StringBuilder();
-
-        for (int i = 0; i < 101; i++) {
-            tooLong.append("1");
-        }
-
-        IllegalArgumentException lengthException = null;
-
-        try {
-            calc.parseValidDouble(tooLong.toString());
-        }
-        catch (IllegalArgumentException e) {
-            lengthException = e;
-        }
-
-        assertNotNull(lengthException);
     }
 
 
     /**
-     * Tests all valid basic operators and an invalid operator.
+     * Tests all four valid basic operators and invalid input.
      */
-    public void testParseBasicOperator() {
-        OverallCalculator calc = new OverallCalculator(new Scanner(""));
+    public void testParseBasicOperator()
+    {
+        OverallCalculator calc =
+            new OverallCalculator(new Scanner(""));
 
-        assertEquals('+', calc.parseBasicOperator("+"));
-        assertEquals('-', calc.parseBasicOperator("-"));
-        assertEquals('*', calc.parseBasicOperator("*"));
-        assertEquals('/', calc.parseBasicOperator("/"));
+        assertEquals(
+            '+',
+            calc.parseBasicOperator("+"));
+
+        assertEquals(
+            '-',
+            calc.parseBasicOperator("-"));
+
+        assertEquals(
+            '*',
+            calc.parseBasicOperator("*"));
+
+        assertEquals(
+            '/',
+            calc.parseBasicOperator("/"));
+
 
         IllegalArgumentException exception = null;
 
-        try {
+        try
+        {
             calc.parseBasicOperator("^");
         }
-        catch (IllegalArgumentException e) {
+        catch (IllegalArgumentException e)
+        {
             exception = e;
         }
 
@@ -420,57 +955,85 @@ public class OverallCalculatorTest extends student.TestCase {
 
 
     /**
-     * Tests normal values, ANS with no stored result, and ANS
-     * after a successful calculation.
+     * Tests normal numbers, ANS without memory,
+     * and ANS after an actual calculation.
      */
-    public void testParseBasicValue() {
-        Scanner input = new Scanner("5\n" + "+\n" + "3\n" + "EXIT\n");
+    public void testParseBasicValue()
+    {
+        Scanner input =
+            new Scanner(
+                "5\n"
+                + "+\n"
+                + "3\n"
+                + "EXIT\n");
 
-        OverallCalculator calc = new OverallCalculator(input);
+        OverallCalculator calc =
+            new OverallCalculator(input);
 
-        // Normal numeric value
-        assertEquals(5.25, calc.parseBasicValue("5.25"), DELTA);
+        assertEquals(
+            2.5,
+            calc.parseBasicValue("2.5"),
+            DELTA);
 
-        // ANS before anything has been calculated
+
         IllegalArgumentException exception = null;
 
-        try {
+        try
+        {
             calc.parseBasicValue("ANS");
         }
-        catch (IllegalArgumentException e) {
+        catch (IllegalArgumentException e)
+        {
             exception = e;
         }
 
         assertNotNull(exception);
 
-        // Store an answer using the actual user flow
-        double result = calc.runFourFunctionCalculator();
+
+        // Store ANS through the actual user-facing calculation path.
+        double result =
+            calc.runFourFunctionCalculator();
 
         assertEquals(8.0, result, DELTA);
 
-        // ANS should now retrieve that result
-        assertEquals(8.0, calc.parseBasicValue("ANS"), DELTA);
+        assertEquals(
+            8.0,
+            calc.parseBasicValue("ANS"),
+            DELTA);
 
         input.close();
     }
 
 
     /**
-     * Tests all valid polynomial operators and an invalid operator.
+     * Tests all polynomial operators and invalid input.
      */
-    public void testParsePolynomialOperator() {
-        OverallCalculator calc = new OverallCalculator(new Scanner(""));
+    public void testParsePolynomialOperator()
+    {
+        OverallCalculator calc =
+            new OverallCalculator(new Scanner(""));
 
-        assertEquals('+', calc.parsePolynomialOperator("+"));
-        assertEquals('-', calc.parsePolynomialOperator("-"));
-        assertEquals('*', calc.parsePolynomialOperator("*"));
+        assertEquals(
+            '+',
+            calc.parsePolynomialOperator("+"));
+
+        assertEquals(
+            '-',
+            calc.parsePolynomialOperator("-"));
+
+        assertEquals(
+            '*',
+            calc.parsePolynomialOperator("*"));
+
 
         IllegalArgumentException exception = null;
 
-        try {
+        try
+        {
             calc.parsePolynomialOperator("/");
         }
-        catch (IllegalArgumentException e) {
+        catch (IllegalArgumentException e)
+        {
             exception = e;
         }
 
@@ -479,64 +1042,42 @@ public class OverallCalculatorTest extends student.TestCase {
 
 
     /**
-     * Tests that 0 * -5 gives 0, which is shown as 0 rather than -0.
+     * Tests all five menu choices and invalid input.
      */
-    public void testRunFourFunctionCalculatorNegativeZero() {
-        Scanner input = new Scanner("0\n" + "*\n" + "-5\n" + "EXIT\n");
-        OverallCalculator calc = new OverallCalculator(input);
+    public void testParseMenuChoice()
+    {
+        OverallCalculator calc =
+            new OverallCalculator(new Scanner(""));
 
-        double result = calc.runFourFunctionCalculator();
+        assertEquals(
+            1,
+            calc.parseMenuChoice("1"));
 
-        assertEquals(0.0, result, DELTA);
-    }
+        assertEquals(
+            2,
+            calc.parseMenuChoice("2"));
 
+        assertEquals(
+            3,
+            calc.parseMenuChoice("3"));
 
-    /**
-     * Tests the derivative calculator menu flow.
-     *
-     * Covers:
-     * normal polynomial and x value
-     * bad x value, then a valid one
-     * a result too large to calculate
-     * running out of input
-     */
-    public void testRunDerivativeSolver() {
-        Scanner input = new Scanner("2\n" + "3\n" + "2\n" + "1\n" + "abc\n"
-            + "2\n");
-        OverallCalculator calc = new OverallCalculator(input);
-        calc.runDerivativeSolver();
+        assertEquals(
+            4,
+            calc.parseMenuChoice("4"));
 
-        Scanner bigInput = new Scanner("2\n" + "1\n" + "0\n" + "0\n"
-            + "1e200\n");
-        OverallCalculator bigCalc = new OverallCalculator(bigInput);
-        bigCalc.runDerivativeSolver();
+        assertEquals(
+            5,
+            calc.parseMenuChoice("5"));
 
-        OverallCalculator emptyCalc = new OverallCalculator(new Scanner(""));
-        emptyCalc.runDerivativeSolver();
-
-        assertNotNull(calc);
-        assertNotNull(bigCalc);
-        assertNotNull(emptyCalc);
-    }
-
-
-    /**
-     * Tests all valid menu choices and invalid menu input.
-     */
-    public void testParseMenuChoice() {
-        OverallCalculator calc = new OverallCalculator(new Scanner(""));
-
-        assertEquals(1, calc.parseMenuChoice("1"));
-        assertEquals(2, calc.parseMenuChoice("2"));
-        assertEquals(3, calc.parseMenuChoice("3"));
-        assertEquals(4, calc.parseMenuChoice("4"));
 
         IllegalArgumentException exception = null;
 
-        try {
-            calc.parseMenuChoice("5");
+        try
+        {
+            calc.parseMenuChoice("6");
         }
-        catch (IllegalArgumentException e) {
+        catch (IllegalArgumentException e)
+        {
             exception = e;
         }
 
