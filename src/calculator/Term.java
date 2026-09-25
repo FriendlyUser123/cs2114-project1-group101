@@ -32,9 +32,8 @@ public class Term {
      *             infinite
      */
     public Term(double coefficient, int degree) {
-        // TODO: route through the setters so the validation lives in one place.
-        this.coefficient = coefficient;
-        this.degree = degree;
+        this.setCoefficient(coefficient);
+        this.setDegree(degree);
     }
 
     // ~ Public Methods ........................................................
@@ -51,8 +50,10 @@ public class Term {
      *             if the coefficient is NaN or infinite
      */
     public void setCoefficient(double coefficient) {
-        // TODO: reject Double.isNaN(...) / Double.isInfinite(...) before
-        // assigning.
+        if (Double.isNaN(coefficient) || Double.isInfinite(coefficient))
+        {
+            throw new IllegalArgumentException("Invalid entry, try again");
+        }
         this.coefficient = coefficient;
     }
 
@@ -68,7 +69,11 @@ public class Term {
      *             if the degree is negative
      */
     public void setDegree(int degree) {
-        // TODO: reject degree < 0 before assigning.
+        if (degree < 0)
+        {
+            throw new IllegalArgumentException("Dgree must "
+                + "be greater than zero");
+        }
         this.degree = degree;
     }
 
