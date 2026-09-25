@@ -546,7 +546,7 @@ public class OverallCalculator
 
         double lower = 0.0;
         double upper = 0.0;
-        int interval = 0;
+        int interval = 2;
 
         boolean gettingLower = true;
         boolean gettingUpper = true;

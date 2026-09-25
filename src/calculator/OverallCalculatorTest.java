@@ -62,7 +62,7 @@ public class OverallCalculatorTest extends student.TestCase {
      * exit
      */
     public void testRun() {
-        Scanner input = new Scanner("5\n" + "1\n" + "5\n" + "+\n" + "8\n"
+        Scanner input = new Scanner("6\n" + "1\n" + "5\n" + "+\n" + "8\n"
             + "EXIT\n" + "2\n" + "0\n" + "1\n" + "0\n" + "2\n" + "+\n" + "4\n"
             + "1\n" + "2\n" + "3\n" + "2\n" + "3\n");
 
