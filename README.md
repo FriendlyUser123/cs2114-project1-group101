@@ -1,48 +1,67 @@
-# CS 2114 Project 1 — Calculator App (Group 101)
+# myFieldCalc — CS 2114 Project 1 (Group 101)
 
 A command-line calculator with two modes:
 
-1. **Four-function calculator** — add, subtract, multiply, and divide decimal numbers.
-   Type `ANS` to reuse the previous answer.
-2. **Polynomial calculator** — enter two polynomials term by term, then add, subtract,
-   or multiply them.
+1. **Four-function calculator.** Add, subtract, multiply, and divide decimal numbers.
+   Type `ANS` to reuse the last answer.
+2. **Polynomial calculator.** Enter two polynomials, then add, subtract, or multiply them.
 
-Every bad input (letters, bad operators, dividing by zero, negative or decimal degrees,
-overflow) shows an error and asks again instead of crashing.
+Bad input never crashes the program. It prints what went wrong and asks again.
 
-## How to run (Eclipse)
+## Run it
 
-1. **File → Import → General → Existing Projects into Workspace**, select this folder.
-2. Open `src/calculator/OverallCalculator.java` → **Run As → Java Application**.
+**Eclipse:** open `src/calculator/OverallCalculator.java`, then **Run As → Java Application**.
+(If you just cloned the repo, first use **File → Import → Existing Projects into Workspace**.)
 
-## How to run (command line)
+**Command line** (from this folder):
 
-```bash
-javac -d bin src/calculator/*.java      # needs JUnit 4 on the classpath for the *Test files
+```
+javac -d bin -sourcepath src src/calculator/OverallCalculator.java
 java -cp bin calculator.OverallCalculator
 ```
 
-To build only the program without the tests:
+## Use it
 
-```bash
-javac -d bin $(ls src/calculator/*.java | grep -v Test.java)
-java -cp bin calculator.OverallCalculator
+At the menu, type **1** (four-function), **2** (polynomial), or **3** (quit).
+
+**Four-function:** enter a number, an operator (`+ - * /`), and a second number.
+Type `ANS` for the last answer, or `EXIT` to go back to the menu.
+
+```
+5    +  8   →  Result: 13
+ANS  *  2   →  Result: 26
 ```
 
-## How to run the tests
+**Polynomial:** enter each polynomial's degree, then its coefficients from the highest
+power down. Leave a coefficient blank to use 0. Then pick `+`, `-`, or `*`.
 
-In Eclipse: right-click `src` → **Run As → JUnit Test** (JUnit 4).
+```
+(x + 2) * (x + 3)   →   The resulting polynomial is: x^2 + 5x + 6
+```
 
-## Classes
+**Bad input the program catches:** letters where a number goes, a wrong operator,
+dividing by 0, a result too large to calculate, and a degree that is negative,
+a decimal, or over 100.
 
-| Class | Responsibility |
+## Run the tests
+
+In Eclipse, right-click `src` and choose **Run As → JUnit Test**.
+The tests use the course's `CS2-Support` project, which must be in your workspace.
+
+## Design
+
+| Class | Job |
 |---|---|
-| `OverallCalculator` | Menu, user input, and all input validation (the `parse…` methods) |
-| `FourFunctionCalculator` | `+ − × ÷` on decimals, plus last-answer memory |
-| `PolynomialCalculator` | `+ − ×` on `Polynomial` objects |
-| `Polynomial` | A list of `Term`s; converts to and from a coefficient array |
-| `Term` | One coefficient-and-degree pair, e.g. `5x^3` |
+| `OverallCalculator` | Menu, reading input, and checking input (the `parse…` methods) |
+| `FourFunctionCalculator` | `+ - * /` on decimals and remembers the last answer |
+| `PolynomialCalculator` | `+ - *` on two `Polynomial`s |
+| `Polynomial` | A list of `Term`s |
+| `Term` | One coefficient and degree, like `5x^3` |
 
-## System diagram
+### System diagram
 
-_TODO: add `diagram.png` to the repo and embed it here:_ `![System diagram](diagram.png)`
+![System diagram](diagram.png)
+
+### User flow
+
+![User flow chart](flowchart.png)

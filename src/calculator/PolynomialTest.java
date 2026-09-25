@@ -1,16 +1,12 @@
 package calculator;
 
-import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.Test;
-
 /**
  * Tests for {@link Polynomial}. Cases come from the Deliverable 2 test plan.
  *
  * @author Aditya Banerjee (adityab7)
  * @version 2026.09.25
  */
-public class PolynomialTest {
+public class PolynomialTest extends student.TestCase {
 
     /** Tolerance for comparing doubles. */
     private static final double DELTA = 1e-9;
@@ -21,16 +17,15 @@ public class PolynomialTest {
     /**
      * Runs before every test.
      */
-    @Before
     public void setUp() {
         poly = new Polynomial();
     }
+
+
     /**
      * Tests the Polynomial constructor.
      */
-    @Test
-    public void testPolynomial()
-    {
+    public void testPolynomial() {
         double[] result = poly.toCoefficientArray();
 
         assertEquals(1, result.length);
@@ -43,9 +38,7 @@ public class PolynomialTest {
      * Tests adding normal terms, adding different degrees,
      * combining duplicate degrees, and rejecting an invalid degree.
      */
-    @Test
-    public void testAddTerm()
-    {
+    public void testAddTerm() {
         poly.addTerm(5.0, 3);
         poly.addTerm(-2.0, 1);
         poly.addTerm(7.0, 0);
@@ -69,12 +62,10 @@ public class PolynomialTest {
         // so call it directly to cover its exception path.
         IllegalArgumentException exception = null;
 
-        try
-        {
+        try {
             poly.addTerm(4.0, -1);
         }
-        catch (IllegalArgumentException e)
-        {
+        catch (IllegalArgumentException e) {
             exception = e;
         }
 
@@ -85,9 +76,7 @@ public class PolynomialTest {
     /**
      * Tests conversion from a polynomial to a coefficient array.
      */
-    @Test
-    public void testToCoefficientArray()
-    {
+    public void testToCoefficientArray() {
         poly.addTerm(5.0, 3);
         poly.addTerm(-2.0, 1);
         poly.addTerm(7.0, 0);
@@ -113,9 +102,7 @@ public class PolynomialTest {
      * Tests rebuilding a polynomial from a coefficient array,
      * including zero entries and invalid arrays.
      */
-    @Test
-    public void testFromCoefficientArray()
-    {
+    public void testFromCoefficientArray() {
         double[] input = { 7.0, -2.0, 0.0, 5.0 };
 
         poly.fromCoefficientArray(input);
@@ -141,12 +128,10 @@ public class PolynomialTest {
         // Null cannot occur through the terminal, but this branch exists
         IllegalArgumentException nullException = null;
 
-        try
-        {
+        try {
             poly.fromCoefficientArray(null);
         }
-        catch (IllegalArgumentException e)
-        {
+        catch (IllegalArgumentException e) {
             nullException = e;
         }
 
@@ -156,13 +141,10 @@ public class PolynomialTest {
         // but is required to cover this validation branch.
         IllegalArgumentException nanException = null;
 
-        try
-        {
-            poly.fromCoefficientArray(
-                new double[] { 1.0, Double.NaN });
+        try {
+            poly.fromCoefficientArray(new double[] { 1.0, Double.NaN });
         }
-        catch (IllegalArgumentException e)
-        {
+        catch (IllegalArgumentException e) {
             nanException = e;
         }
 
@@ -171,13 +153,11 @@ public class PolynomialTest {
         // Infinity reaches the other side of the OR condition.
         IllegalArgumentException infinityException = null;
 
-        try
-        {
-            poly.fromCoefficientArray(
-                new double[] { 1.0, Double.POSITIVE_INFINITY });
+        try {
+            poly.fromCoefficientArray(new double[] { 1.0,
+                Double.POSITIVE_INFINITY });
         }
-        catch (IllegalArgumentException e)
-        {
+        catch (IllegalArgumentException e) {
             infinityException = e;
         }
 
@@ -188,9 +168,7 @@ public class PolynomialTest {
     /**
      * Tests all major polynomial formatting cases.
      */
-    @Test
-    public void testToString()
-    {
+    public void testToString() {
         // Covers:
         // positive first term
         // skipped zero degree

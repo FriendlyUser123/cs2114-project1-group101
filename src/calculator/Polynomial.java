@@ -32,6 +32,7 @@ public class Polynomial {
 
     // ~ Public Methods ........................................................
 
+
     /**
      * Adds a term to this polynomial. If a term with the same degree already
      * exists, the coefficients are combined instead of adding a duplicate.
@@ -48,19 +49,16 @@ public class Polynomial {
     public void addTerm(double coefficient, int degree) {
         Term newTerm = new Term(coefficient, degree);
         boolean degreeAlreadyExists = false;
-        
-        for (Term i : terms)
-        {
-            if (i.getDegree() == newTerm.getDegree())
-            {
+
+        for (Term i : terms) {
+            if (i.getDegree() == newTerm.getDegree()) {
                 i.setCoefficient(i.getCoefficient() + newTerm.getCoefficient());
                 degreeAlreadyExists = true;
                 break;
             }
         }
-        
-        if (!degreeAlreadyExists)
-        {
+
+        if (!degreeAlreadyExists) {
             terms.add(newTerm);
         }
     }
@@ -77,28 +75,23 @@ public class Polynomial {
      */
     public double[] toCoefficientArray() {
         int maxDegree = 0;
-        
-        for (Term i : terms)
-        {
-            if (i.getDegree() >= maxDegree)
-            {
+
+        for (Term i : terms) {
+            if (i.getDegree() >= maxDegree) {
                 maxDegree = i.getDegree();
             }
         }
-        
+
         double[] CoeffArray = new double[maxDegree + 1];
-        
-        for (int i = 0; i < CoeffArray.length; i++)
-        {
-            for (Term j : terms)
-            {
-                if (j.getDegree() == i)
-                {
+
+        for (int i = 0; i < CoeffArray.length; i++) {
+            for (Term j : terms) {
+                if (j.getDegree() == i) {
                     CoeffArray[i] += j.getCoefficient();
                 }
             }
         }
-        
+
         return CoeffArray;
     }
 
@@ -116,29 +109,25 @@ public class Polynomial {
      */
     public void fromCoefficientArray(double[] polyArray) {
         ArrayList<Term> tempArray = new ArrayList<Term>();
-        
-        if (polyArray == null)
-        {
+
+        if (polyArray == null) {
             throw new IllegalArgumentException("Array is null");
         }
-        
-        for (double i : polyArray)
-        {
-            if (Double.isNaN(i) || Double.isInfinite(i))
-            {
-                throw new IllegalArgumentException("Bad input, try again");
+
+        for (double i : polyArray) {
+            if (Double.isNaN(i) || Double.isInfinite(i)) {
+                throw new IllegalArgumentException(
+                    "A coefficient is too large to calculate.");
             }
         }
-        
-        for (int i = 0; i < polyArray.length; i++)
-        {
-            if (polyArray[i] != 0.0)
-            {
+
+        for (int i = 0; i < polyArray.length; i++) {
+            if (polyArray[i] != 0.0) {
                 tempArray.add(new Term(polyArray[i], i));
             }
         }
-        
-        this.terms = tempArray; 
+
+        this.terms = tempArray;
     }
 
 
@@ -154,61 +143,49 @@ public class Polynomial {
         double[] coeffArray = this.toCoefficientArray();
         boolean firstTerm = true;
 
-        for (int i = coeffArray.length - 1; i >= 0; i--)
-        {
+        for (int i = coeffArray.length - 1; i >= 0; i--) {
             double coeff = coeffArray[i];
 
-            if (coeff == 0.0)
-            {
+            if (coeff == 0.0) {
                 continue;
             }
-            if (!firstTerm)
-            {
-                if (coeff > 0)
-                {
+            if (!firstTerm) {
+                if (coeff > 0) {
                     polyString += " + ";
                 }
-                else
-                {
+                else {
                     polyString += " - ";
                 }
             }
-            else if (coeff < 0)
-            {
+            else if (coeff < 0) {
                 polyString += "-";
             }
 
             double absCoeff = Math.abs(coeff);
-            
-            if (absCoeff != 1.0 || i == 0)
-            {
-                
-                if (absCoeff == (long)absCoeff)
-                {
+
+            if (absCoeff != 1.0 || i == 0) {
+
+                if (absCoeff == (long)absCoeff) {
                     polyString += Long.toString((long)absCoeff);
                 }
-                else
-                {
+                else {
                     polyString += Double.toString(absCoeff);
                 }
             }
 
-
-            if (i > 1)
-            {
+            if (i > 1) {
                 polyString += "x^" + Integer.toString(i);
             }
-            else if (i == 1)
-            {
+            else if (i == 1) {
                 polyString += "x";
             }
 
             firstTerm = false;
         }
-        if (firstTerm)
-        {
+        if (firstTerm) {
             return "0";
         }
 
         return polyString;
-    }}
+    }
+}
