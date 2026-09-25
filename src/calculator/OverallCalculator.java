@@ -34,6 +34,9 @@ public class OverallCalculator {
 
     /** Menu choice that opens the derivative calculator. */
     private static final int DERIVATIVE_CHOICE = 4;
+    
+    /** Menu choice that opens the derivative calculator. */
+    private static final int INTEGRAL_CHOICE = 5;
 
     /** Rounds results for display; the stored answer keeps full precision. */
     private static final DecimalFormat RESULT_FORMAT = new DecimalFormat(
@@ -98,7 +101,8 @@ public class OverallCalculator {
         while (menuLoop) {
             System.out.println("Welcome to myFieldCalc! Press 1 for 4-function"
                 + " calculator, 2 for polynomial calculator, 3 to exit, "
-                + "and 4 for Derivative Calculator: ");
+                + "4 for Derivative Calculator, "
+                + "and 5 for Integral Calculator: ");
             int menuChoice = 0;
             if (!scanner.hasNextLine()) {
                 return;
@@ -131,6 +135,13 @@ public class OverallCalculator {
             else if (menuChoice == DERIVATIVE_CHOICE) {
                 System.out.println("Starting Derivative Calculator...");
                 this.runDerivativeSolver();
+                System.out.println("Operation complete, you are being "
+                    + "directed back to the main menu...");
+            }
+            else if (menuChoice == INTEGRAL_CHOICE)
+            {
+                System.out.println("Starting Integral Calculator...");
+                this.runIntegralSolver();
                 System.out.println("Operation complete, you are being "
                     + "directed back to the main menu...");
             }
