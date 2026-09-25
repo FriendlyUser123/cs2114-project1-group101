@@ -72,7 +72,7 @@ public class OverallCalculator {
         while (menuLoop)
         {
             System.out.println("Welcome to myFieldCalc! Press 1 for 4-function"
-                + " calculator, 2 for polynomial calculator, and 3 to exit.");
+                + " calculator, 2 for polynomial calculator, and 3 to exit: ");
             int menuChoice = 0;
             
             try
@@ -94,8 +94,7 @@ public class OverallCalculator {
             else if (menuChoice == 2)
             {
                 System.out.println("Starting Polynomial Calculator...");
-                Polynomial polyResult = this.runPolynomialCalculator();
-                System.out.println("Result: " + polyResult.toString());
+                this.runPolynomialCalculator();
                 System.out.println("Operation complete, you are being "
                     + "directed back to the main menu...");
             }
@@ -267,8 +266,10 @@ public class OverallCalculator {
             
             System.out.println("Follow the steps for polynomial 1: ");
             Polynomial poly1 = getPolynomialFromUser();
+            System.out.println("Polynomial1: " + poly1.toString());
             System.out.println("Follow the steps for polynomial 2: ");
             Polynomial poly2 = getPolynomialFromUser();
+            System.out.println("Polynomial2: " + poly2.toString());
             
             while (gettingOperator)
             {
