@@ -252,7 +252,7 @@ public class OverallCalculator {
                 }
             }
 
-            System.out.println("Result: " + RESULT_FORMAT.format(result));
+            System.out.println("Result: " + formatResult(result));
             lastResult = result;
 
         }
@@ -436,13 +436,30 @@ public class OverallCalculator {
             double solution = derive.evaluatePolynomial(poly, xEval);
             double derivative = derive.evaluateDerivative(poly, xEval);
 
-            System.out.println("At x = " + RESULT_FORMAT.format(xEval)
-                + ", y = " + RESULT_FORMAT.format(solution) + " and y' = "
-                + RESULT_FORMAT.format(derivative));
+            String point = "At x = " + formatResult(xEval);
+            System.out.println(point + ", y = " + formatResult(solution)
+                + " and y' = " + formatResult(derivative));
         }
         catch (ArithmeticException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+
+    /**
+     * Rounds a number for display. Values that round to zero from below
+     * show as 0 instead of -0.
+     *
+     * @param value
+     *            the number to show
+     * @return the rounded number as text
+     */
+    private String formatResult(double value) {
+        String text = RESULT_FORMAT.format(value);
+        if (text.equals("-0")) {
+            return "0";
+        }
+        return text;
     }
 
     // ~ Input validation (parse methods) ......................................

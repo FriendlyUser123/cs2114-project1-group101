@@ -479,6 +479,19 @@ public class OverallCalculatorTest extends student.TestCase {
 
 
     /**
+     * Tests that 0 * -5 gives 0, which is shown as 0 rather than -0.
+     */
+    public void testRunFourFunctionCalculatorNegativeZero() {
+        Scanner input = new Scanner("0\n" + "*\n" + "-5\n" + "EXIT\n");
+        OverallCalculator calc = new OverallCalculator(input);
+
+        double result = calc.runFourFunctionCalculator();
+
+        assertEquals(0.0, result, DELTA);
+    }
+
+
+    /**
      * Tests the derivative calculator menu flow.
      *
      * Covers:
