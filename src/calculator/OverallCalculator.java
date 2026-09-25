@@ -602,7 +602,8 @@ public class OverallCalculator
                 if (interval <= 0 || interval % 2 != 0)
                 {
                     throw new IllegalArgumentException(
-                        "Number of intervals must be positive and even.");
+                        "Number of intervals must be positive, even,"
+                        + " and less than 100 (Beta).");
                 }
                 
                 gettingInterval = false;
