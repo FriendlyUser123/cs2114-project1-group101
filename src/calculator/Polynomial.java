@@ -46,11 +46,23 @@ public class Polynomial {
      *             if the degree is negative or the coefficient is invalid
      */
     public void addTerm(double coefficient, int degree) {
-        // TODO: 1) validate (let the Term constructor do it)
-        // 2) loop over terms; if a Term has the same degree, add to its
-        //    coefficient and return
-        // 3) otherwise add a new Term
-        throw new UnsupportedOperationException("TODO: Polynomial.addTerm");
+        Term newTerm = new Term(coefficient, degree);
+        boolean degreeAlreadyExists = false;
+        
+        for (Term i : terms)
+        {
+            if (i.getDegree() == newTerm.getDegree())
+            {
+                i.setCoefficient(i.getCoefficient() + newTerm.getCoefficient());
+                degreeAlreadyExists = true;
+                break;
+            }
+        }
+        
+        if (!degreeAlreadyExists)
+        {
+            terms.add(newTerm);
+        }
     }
 
 
@@ -64,12 +76,30 @@ public class Polynomial {
      * @return the coefficient array
      */
     public double[] toCoefficientArray() {
-        // TODO: 1) find the highest degree among the terms
-        // 2) make a double[] of length (highest degree + 1)
-        // 3) for each Term, put its coefficient at index = its degree
-        // Decide what an empty polynomial returns (e.g. new double[] {0.0}).
-        throw new UnsupportedOperationException(
-            "TODO: Polynomial.toCoefficientArray");
+        int maxDegree = 0;
+        
+        for (Term i : terms)
+        {
+            if (i.getDegree() >= maxDegree)
+            {
+                maxDegree = i.getDegree();
+            }
+        }
+        
+        double[] CoeffArray = new double[maxDegree + 1];
+        
+        for (int i = 0; i < CoeffArray.length; i++)
+        {
+            for (Term j : terms)
+            {
+                if (j.getDegree() == i)
+                {
+                    CoeffArray[i] += j.getCoefficient();
+                }
+            }
+        }
+        
+        return CoeffArray;
     }
 
 
@@ -85,11 +115,30 @@ public class Polynomial {
      *             if the array is null or contains NaN
      */
     public void fromCoefficientArray(double[] polyArray) {
-        // TODO: 1) validate the array
-        // 2) clear the current terms
-        // 3) for each index with a non-zero coefficient, add a Term
-        throw new UnsupportedOperationException(
-            "TODO: Polynomial.fromCoefficientArray");
+        ArrayList<Term> tempArray = new ArrayList<Term>();
+        
+        if (polyArray == null)
+        {
+            throw new IllegalArgumentException("Array is null");
+        }
+        
+        for (double i : polyArray)
+        {
+            if (Double.isNaN(i) || Double.isInfinite(i))
+            {
+                throw new IllegalArgumentException("Bad input, try again");
+            }
+        }
+        
+        for (int i = 0; i < polyArray.length; i++)
+        {
+            if (polyArray[i] != 0.0)
+            {
+                tempArray.add(new Term(polyArray[i], i));
+            }
+        }
+        
+        this.terms = tempArray; 
     }
 
 
@@ -101,9 +150,25 @@ public class Polynomial {
      */
     @Override
     public String toString() {
-        // TODO: build the string from the highest degree down.
-        // Things to decide: how x^1 and x^0 print, how negative coefficients
-        // turn into " - ", and whether 1.0 prints as "1" or "1.0".
-        return "TODO: Polynomial.toString";
+        String polyString = "";
+        double[] coeffArray = this.toCoefficientArray();
+        
+        for (int i = coeffArray.length - 1; i > 0; i--)
+        {
+            if (coeffArray[i] != 0.0)
+            {
+                polyString += Double.toString(coeffArray[i]) + "x^" + 
+                Integer.toString(i) + " + ";
+            }
+        }
+        polyString += Double.toString(coeffArray[0]);
+        
+        if (polyString.isEmpty())
+        {
+            return "0";
+        }
+        
+        return polyString;
+        
     }
 }
