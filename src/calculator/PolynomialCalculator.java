@@ -26,6 +26,24 @@ public class PolynomialCalculator {
     // ~ Public Methods ........................................................
 
     /**
+     * Checks that the polynomials are not null
+     * 
+     * @param check1 the first polynomial
+     * 
+     * @param check2 the second polynomial
+     * 
+     * @return boolean true if the polynomials are good, false if one is null
+     */
+    public boolean checkPolys(Polynomial check1, Polynomial check2)
+    {
+        if (check1 == null || check2 == null)
+        {
+            return false;
+        }
+        return true;
+    }
+    
+    /**
      * Adds two polynomials.
      *
      * Spec test plan: normal 3x^2 + 2x and 2x^2 + 1 -> 5x^2 + 2x + 1;
@@ -40,10 +58,33 @@ public class PolynomialCalculator {
      *             if either polynomial is null
      */
     public Polynomial add(Polynomial poly1, Polynomial poly2) {
-        // TODO: reject nulls; result array length = the longer of the two;
-        // result[i] = a[i] + b[i], treating a missing index as 0.
-        throw new UnsupportedOperationException(
-            "TODO: PolynomialCalculator.add");
+        if (!this.checkPolys(poly1, poly2))
+        {
+            throw new IllegalArgumentException("Polynomial is null.");
+        }
+        
+        double[] polyArray1 = poly1.toCoefficientArray();
+        double[] polyArray2 = poly2.toCoefficientArray();
+        
+        int resultLength = Math.max(polyArray1.length, polyArray2.length);
+        double[] coeffResult = new double[resultLength];
+        
+        for (int i = 0; i < coeffResult.length; i++)
+        {
+            if (i < polyArray1.length)
+            {
+                coeffResult[i] += polyArray1[i];
+            }
+            if (i < polyArray2.length)
+            {
+                coeffResult[i] += polyArray2[i];
+            }
+        }
+        
+        Polynomial polyResult = new Polynomial();
+        polyResult.fromCoefficientArray(coeffResult);
+        return polyResult;
+        
     }
 
 
@@ -62,9 +103,32 @@ public class PolynomialCalculator {
      *             if either polynomial is null
      */
     public Polynomial subtract(Polynomial poly1, Polynomial poly2) {
-        // TODO: same as add but a[i] - b[i].
-        throw new UnsupportedOperationException(
-            "TODO: PolynomialCalculator.subtract");
+        if (!this.checkPolys(poly1, poly2))
+        {
+            throw new IllegalArgumentException("Polynomial is null.");
+        }
+        
+        double[] polyArray1 = poly1.toCoefficientArray();
+        double[] polyArray2 = poly2.toCoefficientArray();
+        
+        int resultLength = Math.max(polyArray1.length, polyArray2.length);
+        double[] coeffResult = new double[resultLength];
+        
+        for (int i = 0; i < coeffResult.length; i++)
+        {
+            if (i < polyArray1.length)
+            {
+                coeffResult[i] += polyArray1[i];
+            }
+            if (i < polyArray2.length)
+            {
+                coeffResult[i] -= polyArray2[i];
+            }
+        }
+        
+        Polynomial polyResult = new Polynomial();
+        polyResult.fromCoefficientArray(coeffResult);
+        return polyResult;
     }
 
 
@@ -81,14 +145,29 @@ public class PolynomialCalculator {
      * @return a new polynomial equal to poly1 * poly2
      * @throws IllegalArgumentException
      *             if either polynomial is null
-     * @throws ArithmeticException
-     *             if a coefficient overflows
      */
     public Polynomial multiply(Polynomial poly1, Polynomial poly2) {
-        // TODO: result length = a.length + b.length - 1.
-        // Nested loop: result[i + j] += a[i] * b[j]
-        // (degrees add when you multiply terms). Check for infinity.
-        throw new UnsupportedOperationException(
-            "TODO: PolynomialCalculator.multiply");
+        if (!this.checkPolys(poly1, poly2))
+        {
+            throw new IllegalArgumentException("Polynomial is null.");
+        }
+        
+        double[] polyArray1 = poly1.toCoefficientArray();
+        double[] polyArray2 = poly2.toCoefficientArray();
+        
+        int resultLength = polyArray1.length + polyArray2.length - 1;
+        double[] coeffResult = new double[resultLength];
+        
+        for (int i = 0; i < polyArray1.length; i++)
+        {
+            for (int j = 0; j < polyArray2.length; j++)
+            {
+                coeffResult[i + j] += polyArray1[i] * polyArray2[j];
+            }
+        }
+        
+        Polynomial polyResult = new Polynomial();
+        polyResult.fromCoefficientArray(coeffResult);
+        return polyResult;
     }
 }
