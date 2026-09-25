@@ -406,16 +406,9 @@ public class OverallCalculator {
      * Prompts the user to enter a polynomial then gets the derivative of the
      * polynomial
      */
-<<<<<<< HEAD
-    public void runDerivativeSolver()
-    {
-        DerivativeCalculator derive = new DerivativeCalculator();
-        
-=======
     public void runDerivativeSolver() {
         DerivativeCalculator derive = new DerivativeCalculator();
 
->>>>>>> 2f563d34805b578e9f216b253a6104baeecdab82
         System.out.println("First enter your polynomial: ");
         Polynomial poly = this.getPolynomialFromUser();
         System.out.println("Polynomial is: " + poly.toString());
