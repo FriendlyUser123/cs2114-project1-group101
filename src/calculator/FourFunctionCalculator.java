@@ -131,7 +131,7 @@ public class FourFunctionCalculator {
             }
         
         this.hasLastResult = true;
-        this.lastResult = result;
+        this.setLast(result);
         return result;
         
     }
@@ -159,7 +159,7 @@ public class FourFunctionCalculator {
                 + "in infinite value");
         }
         this.hasLastResult = true;
-        this.lastResult = result;
+        this.setLast(result);
         return result;
     }
 
@@ -186,7 +186,7 @@ public class FourFunctionCalculator {
                 + "in infinite value");
         }
         this.hasLastResult = true;
-        this.lastResult = result;
+        this.setLast(result);
         return result;
     }
 
@@ -217,7 +217,7 @@ public class FourFunctionCalculator {
                 + "in infinite value");
         }
         this.hasLastResult = true;
-        this.lastResult = result;
+        this.setLast(result);
         return result;
     }
 }

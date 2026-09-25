@@ -196,6 +196,7 @@ public class OverallCalculator {
                 catch (Exception e)
                 {
                     System.out.println("try again");
+                    continue;
                 }
             }
             else if (operator == '-')
@@ -207,6 +208,7 @@ public class OverallCalculator {
                 catch (Exception e)
                 {
                     System.out.println("try again");
+                    continue;
                 }
             }
             else if (operator == '*')
@@ -218,6 +220,7 @@ public class OverallCalculator {
                 catch (Exception e)
                 {
                     System.out.println("try again");
+                    continue;
                 }
             }
             else if (operator == '/')
@@ -229,10 +232,12 @@ public class OverallCalculator {
                 catch (Exception e)
                 {
                     System.out.println("try again");
+                    continue;
                 }
             }
             
             System.out.println("Result: " + Double.toString(result));
+            lastResult = result;
             
         }
         
@@ -250,11 +255,76 @@ public class OverallCalculator {
      * @return the resulting polynomial
      */
     public Polynomial runPolynomialCalculator() {
-        // TODO: p1 = getPolynomialFromUser(); read operator with
-        // parsePolynomialOperator; p2 = getPolynomialFromUser();
-        // call polyCalc.add / subtract / multiply.
-        throw new UnsupportedOperationException(
-            "TODO: OverallCalculator.runPolynomialCalculator");
+        polyCalc = new PolynomialCalculator();
+        Polynomial result = new Polynomial();
+        boolean operating = true;
+        
+        while (operating)
+        {
+            boolean gettingOperator = true;
+            char operator = ' ';
+            
+            
+            System.out.println("Follow the steps for polynomial 1: ");
+            Polynomial poly1 = getPolynomialFromUser();
+            System.out.println("Follow the steps for polynomial 2: ");
+            Polynomial poly2 = getPolynomialFromUser();
+            
+            while (gettingOperator)
+            {
+                System.out.println("Enter polynomial operation: ");
+                try
+                {
+                    operator = this.parsePolynomialOperator(scanner.nextLine());
+                    gettingOperator = false;
+                }
+                catch (IllegalArgumentException e)
+                {
+                    System.out.println("Try again");
+                }   
+            }
+            
+            if (operator == '+')
+            {
+                try
+                {
+                    result = polyCalc.add(poly1, poly2);
+                }
+                catch (Exception e)
+                {
+                    System.out.println("try again");
+                    continue;
+                }
+            }
+            else if (operator == '-')
+            {
+                try
+                {
+                    result = polyCalc.subtract(poly1, poly2);
+                }
+                catch (Exception e)
+                {
+                    System.out.println("try again");
+                    continue;
+                }
+            }
+            else if (operator == '*')
+            {
+                try
+                {
+                    result = polyCalc.multiply(poly1, poly2);
+                }
+                catch (Exception e)
+                {
+                    System.out.println("try again");
+                    continue;
+                }
+            }
+            
+            operating = false;
+        }
+        System.out.println("The resulting polynomial is: " + result.toString());
+        return result;
     }
 
 
@@ -270,11 +340,62 @@ public class OverallCalculator {
      * @return the polynomial the user entered
      */
     public Polynomial getPolynomialFromUser() {
-        // TODO: ask for the highest degree (parseDegree), then for each degree
-        // from highest down to 0 ask for a coefficient (parseValidDouble;
-        // a blank line means 0) and call polynomial.addTerm(coef, degree).
-        throw new UnsupportedOperationException(
-            "TODO: OverallCalculator.getPolynomialFromUser");
+        boolean gettingPoly = true;
+        Polynomial userPoly = new Polynomial();
+        while (gettingPoly)
+        {
+            boolean gettingDegree = true;
+            int degree = 0;
+            
+            while (gettingDegree)
+            {
+                System.out.println("Enter the order of polynomial: ");
+                try
+                {
+                    degree = this.parseDegree(scanner.nextLine());
+                    gettingDegree = false;
+                }
+                catch (IllegalArgumentException e)
+                {
+                    System.out.println("try again");
+                }
+            }
+            
+            for (int i = degree; i >= 0; i--)
+            {
+                boolean gettingTerm = true;
+                double coeff = 0.0;
+                while (gettingTerm)
+                {
+                    System.out.println("Enter the coefficient of term with "
+                        + "degree " + Integer.toString(i) + ": ");
+                    
+                    String in = scanner.nextLine();
+                    
+                    if (in.isEmpty())
+                    {
+                        coeff = 0.0;
+                        gettingTerm = false;
+                    }
+                    else
+                    {
+                        try
+                        {
+                            coeff = parseValidDouble(in);
+                            gettingTerm = false;
+                        }
+                        catch (IllegalArgumentException e)
+                        {
+                            System.out.println("try again");
+                        }
+                    }
+                }
+                userPoly.addTerm(coeff, i);
+            }
+            
+            gettingPoly = false;
+        }
+        return userPoly;
     }
 
     // ~ Input validation (parse methods) ......................................
