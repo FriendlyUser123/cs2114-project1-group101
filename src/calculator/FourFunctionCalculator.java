@@ -58,10 +58,11 @@ public class FourFunctionCalculator {
      *             if last is NaN or infinite
      */
     public void setLast(double last) {
-        // TODO: validate FIRST (so a bad value never overwrites a good one),
-        // then store it and mark that a result exists.
-        throw new UnsupportedOperationException(
-            "TODO: FourFunctionCalculator.setLast");
+        if (Double.isNaN(last) || Double.isInfinite(last))
+        {
+            throw new IllegalArgumentException("Invalid entry, try again");
+        }
+        this.lastResult = last;
     }
 
 
@@ -76,9 +77,31 @@ public class FourFunctionCalculator {
      *             if no answer has been stored yet
      */
     public double getLast() {
-        // TODO: if nothing is stored, throw; otherwise return lastResult.
-        throw new UnsupportedOperationException(
-            "TODO: FourFunctionCalculator.getLast");
+        if (!hasLastResult)
+        {
+            throw new IllegalStateException("There is no last entry");
+        }
+        return lastResult;
+    }
+    
+    /**
+     * Checks whether a set of doubles are valid
+     * 
+     * @param check1 the first number
+     * 
+     * @param check2 the second number
+     * 
+     * @throws IllegalArgumentException if bad input
+     * 
+     * If either are invalid an exception is thrown
+     */
+    public void checkDouble(double check1, double check2)
+    {
+        if (Double.isNaN(check1) || Double.isInfinite(check1) || 
+            Double.isNaN(check2) || Double.isInfinite(check2))
+        {
+            throw new IllegalArgumentException("Invalid entry, try again");
+        }
     }
 
 
@@ -96,11 +119,21 @@ public class FourFunctionCalculator {
      *             if the result overflows to infinity
      */
     public double add(double num1, double num2) {
-        // TODO: compute, check Double.isInfinite(result), store with setLast,
-        // return. The same overflow check applies to all four operations, so
-        // consider one private helper.
-        throw new UnsupportedOperationException(
-            "TODO: FourFunctionCalculator.add");
+        
+        this.checkDouble(num1, num2);
+        
+        double result = num1 + num2;
+        
+        if (Double.isNaN(result) || Double.isInfinite(result))
+            {
+                throw new ArithmeticException("Operation reuslts "
+                    + "in infinite value");
+            }
+        
+        this.hasLastResult = true;
+        this.lastResult = result;
+        return result;
+        
     }
 
 
@@ -118,9 +151,16 @@ public class FourFunctionCalculator {
      *             if the result overflows to infinity
      */
     public double subtract(double num1, double num2) {
-        // TODO: same pattern as add.
-        throw new UnsupportedOperationException(
-            "TODO: FourFunctionCalculator.subtract");
+        this.checkDouble(num1, num2);
+        double result = num1 - num2;
+        if (Double.isNaN(result) || Double.isInfinite(result))
+        {
+            throw new ArithmeticException("Operation reuslts "
+                + "in infinite value");
+        }
+        this.hasLastResult = true;
+        this.lastResult = result;
+        return result;
     }
 
 
@@ -138,9 +178,16 @@ public class FourFunctionCalculator {
      *             if the result overflows to infinity
      */
     public double multiply(double num1, double num2) {
-        // TODO: same pattern as add.
-        throw new UnsupportedOperationException(
-            "TODO: FourFunctionCalculator.multiply");
+        this.checkDouble(num1, num2);
+        double result = num1 * num2;
+        if (Double.isNaN(result) || Double.isInfinite(result))
+        {
+            throw new ArithmeticException("Operation reuslts "
+                + "in infinite value");
+        }
+        this.hasLastResult = true;
+        this.lastResult = result;
+        return result;
     }
 
 
@@ -158,10 +205,19 @@ public class FourFunctionCalculator {
      *             if num2 is 0
      */
     public double divide(double num1, double num2) {
-        // TODO: reject num2 == 0 BEFORE dividing. Doubles don't throw on
-        // divide-by-zero, they quietly return Infinity, so this check is
-        // required.
-        throw new UnsupportedOperationException(
-            "TODO: FourFunctionCalculator.divide");
+        this.checkDouble(num1, num2);
+        if (num2 == 0)
+        {
+            throw new IllegalArgumentException("Divide by 0");
+        }
+        double result = num1 / num2;
+        if (Double.isNaN(result) || Double.isInfinite(result))
+        {
+            throw new IllegalArgumentException("Operation reuslts "
+                + "in infinite value");
+        }
+        this.hasLastResult = true;
+        this.lastResult = result;
+        return result;
     }
 }
