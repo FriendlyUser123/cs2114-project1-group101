@@ -1,5 +1,7 @@
 package calculator;
 
+import org.junit.Test;
+
 /**
  * Tests for {@link DerivativeCalculator}.
  *
@@ -35,6 +37,7 @@ public class DerivativeCalculatorTest extends student.TestCase {
     /**
      * Tests evaluating 3x^2 + 2x + 1 at several x values.
      */
+    @Test
     public void testEvaluatePolynomial() {
         assertEquals(17.0, calc.evaluatePolynomial(poly, 2.0), DELTA);
         assertEquals(1.0, calc.evaluatePolynomial(poly, 0.0), DELTA);
@@ -45,6 +48,7 @@ public class DerivativeCalculatorTest extends student.TestCase {
     /**
      * Tests that evaluatePolynomial rejects bad input and overflow.
      */
+    @Test
     public void testEvaluatePolynomialExceptions() {
         IllegalArgumentException nullException = null;
 
@@ -96,6 +100,7 @@ public class DerivativeCalculatorTest extends student.TestCase {
      * Tests the derivative of 3x^2 + 2x + 1, which is 6x + 2, and the
      * derivative of a constant, which is 0.
      */
+    @Test
     public void testEvaluateDerivative() {
         assertEquals(14.0, calc.evaluateDerivative(poly, 2.0), DELTA);
         assertEquals(2.0, calc.evaluateDerivative(poly, 0.0), DELTA);
@@ -111,6 +116,7 @@ public class DerivativeCalculatorTest extends student.TestCase {
     /**
      * Tests that evaluateDerivative rejects bad input and overflow.
      */
+    @Test
     public void testEvaluateDerivativeExceptions() {
         IllegalArgumentException nullException = null;
 

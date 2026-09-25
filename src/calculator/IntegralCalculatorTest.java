@@ -3,6 +3,12 @@ package calculator;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+/**
+ *  Tests the integral calculator class to make sure it works as intended.
+ * 
+ *  @author Ethan Gearhart
+ *  @version Sep 25, 2026
+ */
 
 public class IntegralCalculatorTest
 {
@@ -23,6 +29,7 @@ public class IntegralCalculatorTest
     /**
      * Tests creation of an IntegralCalculator.
      */
+    @Test
     public void testIntegralCalculator()
     {
         IntegralCalculator testCalc = new IntegralCalculator();
@@ -34,6 +41,7 @@ public class IntegralCalculatorTest
     /**
      * Tests direct polynomial evaluation.
      */
+    @Test
     public void testEvaluatePolynomial()
     {
         // f(x) = 3x^2 - 2x + 5
@@ -60,6 +68,7 @@ public class IntegralCalculatorTest
      * Tests normal Simpson's Rule operation. Simpson's Rule exactly integrates
      * cubic polynomials.
      */
+    @Test
     public void testSimpsonsRule()
     {
         // f(x) = x^3
@@ -88,6 +97,7 @@ public class IntegralCalculatorTest
     /**
      * Tests null polynomial input.
      */
+    @Test
     public void testNullPolynomial()
     {
         IllegalArgumentException exception = null;
@@ -108,6 +118,7 @@ public class IntegralCalculatorTest
     /**
      * Tests invalid integration bounds.
      */
+    @Test
     public void testInvalidBounds()
     {
         poly.addTerm(1.0, 2);
@@ -173,6 +184,7 @@ public class IntegralCalculatorTest
     /**
      * Tests invalid numbers of intervals.
      */
+    @Test
     public void testInvalidIntervals()
     {
         poly.addTerm(1.0, 2);
@@ -210,6 +222,7 @@ public class IntegralCalculatorTest
     /**
      * Tests an integral whose result overflows to infinity.
      */
+    @Test
     public void testInfiniteResult()
     {
         /*
@@ -236,6 +249,7 @@ public class IntegralCalculatorTest
     /**
      * Tests an integral calculation that results in NaN.
      */
+    @Test
     public void testNaNResult()
     {
         /*
