@@ -72,7 +72,8 @@ public class OverallCalculator {
         while (menuLoop)
         {
             System.out.println("Welcome to myFieldCalc! Press 1 for 4-function"
-                + " calculator, 2 for polynomial calculator, and 3 to exit: ");
+                + " calculator, 2 for polynomial calculator, 3 to exit, "
+                + "and 4 for Derivative Calculator: ");
             int menuChoice = 0;
             
             try
@@ -103,6 +104,13 @@ public class OverallCalculator {
                 System.out.println("Goodbye!");
                 scanner.close();
                 menuLoop = false;
+            }
+            else if (menuChoice == 4)
+            {
+                System.out.println("Starting Derivative Calculator...");
+                this.runDerivativeSolver();
+                System.out.println("Operation complete, you are being "
+                    + "directed back to the main menu...");
             }
         }
     }
@@ -404,6 +412,46 @@ public class OverallCalculator {
         }
         return userPoly;
     }
+    
+    /**
+     * Prompts the user to enter a polynomial then gets the derivative of the 
+     * polynomial
+     */
+    public void runDerivativeSolver()
+    {
+        DerivativeCalculator derive = new DerivativeCalculator;
+        
+        System.out.println("First enter your polynomial: ");
+        Polynomial poly = this.getPolynomialFromUser();
+        System.out.println("Polynomial is: " + poly.toString());
+        
+        boolean gettingX = true;
+        
+        double xEval = 0.0;
+        
+        while (gettingX)
+        {
+            System.out.println("Now enter the value to evaluate the "
+                + "derivative at");
+            try
+            {
+                xEval = parseValidDouble(scanner.nextLine());
+                gettingX = false;
+            }
+            catch (Exception e)
+            {
+                System.out.println(e.getMessage());
+            }
+        }
+        
+        double solution = derive.evaluatePolynomial(poly, xEval);
+        double derivative = derive.evaluateDerivative(poly, xEval);
+        
+        System.out.println(" At x = " + Double.toString(xEval) + 
+            ", y = " + Double.toString(solution) + " and y' = " + 
+            Double.toString(derivative));
+        
+    }
 
     // ~ Input validation (parse methods) ......................................
 
@@ -555,7 +603,8 @@ public class OverallCalculator {
      *             if the text is not 1, 2, or 3
      */
     public int parseMenuChoice(String input) {
-        if (!(input.equals("1") || input.equals("2") || input.equals("3")))
+        if (!(input.equals("1") || input.equals("2") || input.equals("3") 
+            || input.equals("4")))
         {
             throw new IllegalArgumentException("invalid menu choice input");
         }
