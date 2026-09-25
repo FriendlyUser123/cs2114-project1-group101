@@ -1,8 +1,10 @@
 package calculator;
 
 import java.io.ByteArrayInputStream;
+
 import java.io.InputStream;
 import java.util.Scanner;
+import static org.junit.Assert.*;
 
 /**
  * Tests for {@link OverallCalculator}. Cases come from the Deliverable 2 test
