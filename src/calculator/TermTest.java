@@ -1,10 +1,6 @@
 package calculator;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,58 +27,108 @@ public class TermTest {
     }
 
 
-    /** Normal: new Term(5, 3) is 5x^3. */
+    /**
+     * Tests the Term constructor.
+     */
     @Test
-    public void testConstructor() {
-        fail("TODO: assert getCoefficient() == 5.0 and getDegree() == 3");
+    public void testTerm()
+    {
+        Term testTerm = new Term(-4.5, 2);
+
+        assertEquals(-4.5, testTerm.getCoefficient(), DELTA);
+        assertEquals(2, testTerm.getDegree());
     }
 
 
-    /** Bad: degree -1 throws. */
-    @Test(expected = IllegalArgumentException.class)
-    public void testConstructorNegativeDegree() {
-        fail("TODO: new Term(5.0, -1)");
-    }
-
-
-    /** Normal: setCoefficient(-4.5) makes the coefficient -4.5. */
+    /**
+     * Tests setting a valid coefficient and rejecting invalid coefficients.
+     */
     @Test
-    public void testSetCoefficient() {
-        fail("TODO: term.setCoefficient(-4.5); assert -4.5");
+    public void testSetCoefficient()
+    {
+        term.setCoefficient(-7.25);
+        assertEquals(-7.25, term.getCoefficient(), DELTA);
+
+        IllegalArgumentException nanException = null;
+
+        try
+        {
+            term.setCoefficient(Double.NaN);
+        }
+        catch (IllegalArgumentException e)
+        {
+            nanException = e;
+        }
+
+        assertNotNull(nanException);
+        assertEquals(-7.25, term.getCoefficient(), DELTA);
+
+        IllegalArgumentException infinityException = null;
+
+        try
+        {
+            term.setCoefficient(Double.POSITIVE_INFINITY);
+        }
+        catch (IllegalArgumentException e)
+        {
+            infinityException = e;
+        }
+
+        assertNotNull(infinityException);
+        assertEquals(-7.25, term.getCoefficient(), DELTA);
     }
 
 
-    /** Bad: setCoefficient(NaN) throws. */
-    @Test(expected = IllegalArgumentException.class)
-    public void testSetCoefficientNaN() {
-        fail("TODO: term.setCoefficient(Double.NaN)");
-    }
-
-
-    /** Normal: setDegree(4) makes the degree 4. */
+    /**
+     * Tests setting valid and invalid degrees.
+     */
     @Test
-    public void testSetDegree() {
-        fail("TODO: term.setDegree(4); assert 4");
+    public void testSetDegree()
+    {
+        term.setDegree(4);
+        assertEquals(4, term.getDegree());
+
+        term.setDegree(0);
+        assertEquals(0, term.getDegree());
+
+        IllegalArgumentException exception = null;
+
+        try
+        {
+            term.setDegree(-2);
+        }
+        catch (IllegalArgumentException e)
+        {
+            exception = e;
+        }
+
+        assertNotNull(exception);
+        assertEquals(0, term.getDegree());
     }
 
 
-    /** Bad: setDegree(-2) throws. */
-    @Test(expected = IllegalArgumentException.class)
-    public void testSetDegreeNegative() {
-        fail("TODO: term.setDegree(-2)");
-    }
-
-
-    /** Normal: a coefficient of 7.5 is returned as 7.5. */
+    /**
+     * Tests getting the coefficient.
+     */
     @Test
-    public void testGetCoefficient() {
-        fail("TODO: new Term(7.5, 1).getCoefficient() == 7.5");
+    public void testGetCoefficient()
+    {
+        assertEquals(5.0, term.getCoefficient(), DELTA);
+
+        term.setCoefficient(-2.75);
+        assertEquals(-2.75, term.getCoefficient(), DELTA);
     }
 
 
-    /** Normal: a degree of 4 is returned as 4. */
+    /**
+     * Tests getting the degree.
+     */
     @Test
-    public void testGetDegree() {
-        fail("TODO: new Term(1.0, 4).getDegree() == 4");
+    public void testGetDegree()
+    {
+        assertEquals(3, term.getDegree());
+
+        term.setDegree(10);
+        assertEquals(10, term.getDegree());
     }
 }
