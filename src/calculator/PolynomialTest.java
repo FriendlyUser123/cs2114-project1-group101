@@ -1,10 +1,6 @@
 package calculator;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,75 +25,215 @@ public class PolynomialTest {
     public void setUp() {
         poly = new Polynomial();
     }
-
-
-    /** Normal: a new polynomial is empty (prints "0"). */
+    /**
+     * Tests the Polynomial constructor.
+     */
     @Test
-    public void testConstructorEmpty() {
-        fail("TODO: assertEquals(\"0\", poly.toString())");
+    public void testPolynomial()
+    {
+        double[] result = poly.toCoefficientArray();
+
+        assertEquals(1, result.length);
+        assertEquals(0.0, result[0], DELTA);
+        assertEquals("0", poly.toString());
     }
 
 
-    /** Normal: addTerm(5, 3) adds 5x^3. */
+    /**
+     * Tests adding normal terms, adding different degrees,
+     * combining duplicate degrees, and rejecting an invalid degree.
+     */
     @Test
-    public void testAddTerm() {
-        fail("TODO: poly.addTerm(5, 3); check toCoefficientArray()[3] == 5");
+    public void testAddTerm()
+    {
+        poly.addTerm(5.0, 3);
+        poly.addTerm(-2.0, 1);
+        poly.addTerm(7.0, 0);
+
+        double[] result = poly.toCoefficientArray();
+
+        assertEquals(4, result.length);
+        assertEquals(7.0, result[0], DELTA);
+        assertEquals(-2.0, result[1], DELTA);
+        assertEquals(0.0, result[2], DELTA);
+        assertEquals(5.0, result[3], DELTA);
+
+        // Same degree should combine instead of creating another term
+        poly.addTerm(3.0, 3);
+
+        result = poly.toCoefficientArray();
+
+        assertEquals(8.0, result[3], DELTA);
+
+        // Negative degree cannot normally reach addTerm through the terminal,
+        // so call it directly to cover its exception path.
+        IllegalArgumentException exception = null;
+
+        try
+        {
+            poly.addTerm(4.0, -1);
+        }
+        catch (IllegalArgumentException e)
+        {
+            exception = e;
+        }
+
+        assertNotNull(exception);
     }
 
 
-    /** Duplicate degrees combine: 2x^2 + 3x^2 is 5x^2. */
+    /**
+     * Tests conversion from a polynomial to a coefficient array.
+     */
     @Test
-    public void testAddTermCombinesDuplicateDegree() {
-        fail("TODO: addTerm(2, 2); addTerm(3, 2); expect [0, 0, 5]");
+    public void testToCoefficientArray()
+    {
+        poly.addTerm(5.0, 3);
+        poly.addTerm(-2.0, 1);
+        poly.addTerm(7.0, 0);
+
+        double[] result = poly.toCoefficientArray();
+
+        assertEquals(4, result.length);
+        assertEquals(7.0, result[0], DELTA);
+        assertEquals(-2.0, result[1], DELTA);
+        assertEquals(0.0, result[2], DELTA);
+        assertEquals(5.0, result[3], DELTA);
+
+        // Also covers the empty/zero polynomial case
+        Polynomial empty = new Polynomial();
+        double[] zero = empty.toCoefficientArray();
+
+        assertEquals(1, zero.length);
+        assertEquals(0.0, zero[0], DELTA);
     }
 
 
-    /** Bad: degree -1 throws. */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAddTermNegativeDegree() {
-        fail("TODO: poly.addTerm(5, -1)");
-    }
-
-
-    /** Normal: 5x^3 - 2x + 7 becomes [7, -2, 0, 5]. */
+    /**
+     * Tests rebuilding a polynomial from a coefficient array,
+     * including zero entries and invalid arrays.
+     */
     @Test
-    public void testToCoefficientArray() {
-        fail("TODO: build 5x^3 - 2x + 7, compare with assertArrayEquals");
+    public void testFromCoefficientArray()
+    {
+        double[] input = { 7.0, -2.0, 0.0, 5.0 };
+
+        poly.fromCoefficientArray(input);
+
+        double[] result = poly.toCoefficientArray();
+
+        assertEquals(4, result.length);
+        assertEquals(7.0, result[0], DELTA);
+        assertEquals(-2.0, result[1], DELTA);
+        assertEquals(0.0, result[2], DELTA);
+        assertEquals(5.0, result[3], DELTA);
+
+        // Verify that calling the method again overwrites the old polynomial
+        double[] replacement = { 4.0, 3.0 };
+        poly.fromCoefficientArray(replacement);
+
+        result = poly.toCoefficientArray();
+
+        assertEquals(2, result.length);
+        assertEquals(4.0, result[0], DELTA);
+        assertEquals(3.0, result[1], DELTA);
+
+        // Null cannot occur through the terminal, but this branch exists
+        IllegalArgumentException nullException = null;
+
+        try
+        {
+            poly.fromCoefficientArray(null);
+        }
+        catch (IllegalArgumentException e)
+        {
+            nullException = e;
+        }
+
+        assertNotNull(nullException);
+
+        // NaN cannot get through terminal validation either,
+        // but is required to cover this validation branch.
+        IllegalArgumentException nanException = null;
+
+        try
+        {
+            poly.fromCoefficientArray(
+                new double[] { 1.0, Double.NaN });
+        }
+        catch (IllegalArgumentException e)
+        {
+            nanException = e;
+        }
+
+        assertNotNull(nanException);
+
+        // Infinity reaches the other side of the OR condition.
+        IllegalArgumentException infinityException = null;
+
+        try
+        {
+            poly.fromCoefficientArray(
+                new double[] { 1.0, Double.POSITIVE_INFINITY });
+        }
+        catch (IllegalArgumentException e)
+        {
+            infinityException = e;
+        }
+
+        assertNotNull(infinityException);
     }
 
 
-    /** Bad: an empty polynomial gives the zero-polynomial array. */
+    /**
+     * Tests all major polynomial formatting cases.
+     */
     @Test
-    public void testToCoefficientArrayEmpty() {
-        fail("TODO: decide the zero representation (e.g. {0.0}) and assert it");
-    }
+    public void testToString()
+    {
+        // Covers:
+        // positive first term
+        // skipped zero degree
+        // later negative term
+        // later positive term
+        // degree > 1
+        // degree == 1
+        // degree == 0
+        poly.addTerm(5.0, 3);
+        poly.addTerm(-2.0, 1);
+        poly.addTerm(7.0, 0);
 
+        assertEquals("5x^3 - 2x + 7", poly.toString());
 
-    /** Normal: [7, -2, 0, 5] becomes 5x^3 - 2x + 7. */
-    @Test
-    public void testFromCoefficientArray() {
-        fail("TODO: fromCoefficientArray(new double[] {7, -2, 0, 5}); "
-            + "assert toString()");
-    }
+        // Negative first term
+        Polynomial negativeFirst = new Polynomial();
+        negativeFirst.addTerm(-5.0, 2);
+        negativeFirst.addTerm(2.0, 0);
 
+        assertEquals("-5x^2 + 2", negativeFirst.toString());
 
-    /** Bad: an array containing NaN throws. */
-    @Test(expected = IllegalArgumentException.class)
-    public void testFromCoefficientArrayNaN() {
-        fail("TODO: fromCoefficientArray(new double[] {1, Double.NaN})");
-    }
+        // Coefficients of +1 and -1 should not print the 1
+        Polynomial unitCoefficients = new Polynomial();
+        unitCoefficients.addTerm(1.0, 2);
+        unitCoefficients.addTerm(-1.0, 1);
 
+        assertEquals("x^2 - x", unitCoefficients.toString());
 
-    /** Normal: 5x^3 - 2x + 7 prints as "5x^3 - 2x + 7". */
-    @Test
-    public void testToString() {
-        fail("TODO: assertEquals(\"5x^3 - 2x + 7\", poly.toString())");
-    }
+        // Decimal coefficient reaches the non-integer formatting path
+        Polynomial decimal = new Polynomial();
+        decimal.addTerm(2.5, 2);
 
+        assertEquals("2.5x^2", decimal.toString());
 
-    /** Bad: the empty polynomial prints as "0". */
-    @Test
-    public void testToStringEmpty() {
-        fail("TODO: assertEquals(\"0\", new Polynomial().toString())");
+        // Constant coefficient of 1 must still print as 1
+        Polynomial constantOne = new Polynomial();
+        constantOne.addTerm(1.0, 0);
+
+        assertEquals("1", constantOne.toString());
+
+        // Complete zero polynomial
+        Polynomial zero = new Polynomial();
+
+        assertEquals("0", zero.toString());
     }
 }
