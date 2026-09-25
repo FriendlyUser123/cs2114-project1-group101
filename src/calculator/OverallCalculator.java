@@ -210,7 +210,7 @@ public class OverallCalculator {
                 {
                     result = fourFunctionCalc.subtract(value1, value2);
                 }
-                catch (Exception e)
+                catch (Exception e) 
                 {
                     System.out.println("try again");
                     continue;

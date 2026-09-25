@@ -75,7 +75,7 @@ public class PolynomialCalculator {
             {
                 coeffResult[i] += polyArray1[i];
             }
-            if (i < polyArray2.length)
+            if (i < polyArray2.length) 
             {
                 coeffResult[i] += polyArray2[i];
             }
