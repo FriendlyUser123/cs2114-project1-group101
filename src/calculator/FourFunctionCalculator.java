@@ -62,6 +62,7 @@ public class FourFunctionCalculator {
         {
             throw new IllegalArgumentException("Invalid entry, try again");
         }
+        this.hasLastResult = true;
         this.lastResult = last;
     }
 
