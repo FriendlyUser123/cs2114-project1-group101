@@ -10,6 +10,8 @@ package calculator;
  * {@link Polynomial#fromCoefficientArray(double[])}.
  *
  * @author Aditya Banerjee (adityab7)
+ * @author Ethan Gearhart (ethang06)
+ * @author Nandini Duggaraju (nduggaraju)
  * @version 2026.09.25
  */
 public class PolynomialCalculator {

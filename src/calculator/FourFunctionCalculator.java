@@ -5,6 +5,8 @@ package calculator;
  * one-slot memory that remembers the last answer so the user can type "ANS".
  *
  * @author Aditya Banerjee (adityab7)
+ * @author Ethan Gearhart (ethang06)
+ * @author Nandini Duggaraju (nduggaraju)
  * @version 2026.09.25
  */
 public class FourFunctionCalculator {

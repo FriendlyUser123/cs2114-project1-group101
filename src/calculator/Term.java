@@ -6,6 +6,8 @@ package calculator;
  * degree 3. A collection of Terms makes up a {@link Polynomial}.
  *
  * @author Aditya Banerjee (adityab7)
+ * @author Ethan Gearhart (ethang06)
+ * @author Nandini Duggaraju (nduggaraju)
  * @version 2026.09.25
  */
 public class Term {

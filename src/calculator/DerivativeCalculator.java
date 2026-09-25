@@ -3,8 +3,9 @@ package calculator;
 /**
  * Evaluates a polynomial and its derivative at a specific x value
  *
- * @author Ethan Gearhart
- * @author Nandini Duggaraju
+ * @@author Aditya Banerjee (adityab7)
+ * @author Ethan Gearhart (ethang06)
+ * @author Nandini Duggaraju (nduggaraju)
  * @version Sep 25, 2026
  */
 

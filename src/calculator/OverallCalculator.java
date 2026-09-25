@@ -11,6 +11,8 @@ import java.util.Scanner;
  * error and re-prompt.
  *
  * @author Aditya Banerjee (adityab7)
+ * @author Ethan Gearhart (ethang06)
+ * @author Nandini Duggaraju (nduggaraju)
  * @version 2026.09.25
  */
 public class OverallCalculator

@@ -6,7 +6,9 @@ import org.junit.Test;
 /**
  *  Tests the integral calculator class to make sure it works as intended.
  * 
- *  @author Ethan Gearhart
+ *  @author Aditya Banerjee (adityab7)
+ * @author Ethan Gearhart (ethang06)
+ * @author Nandini Duggaraju (nduggaraju)
  *  @version Sep 25, 2026
  */
 

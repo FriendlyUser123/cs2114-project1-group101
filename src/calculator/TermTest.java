@@ -4,6 +4,8 @@ package calculator;
  * Tests for {@link Term}. Cases come from the Deliverable 2 test plan.
  *
  * @author Aditya Banerjee (adityab7)
+ * @author Ethan Gearhart (ethang06)
+ * @author Nandini Duggaraju (nduggaraju)
  * @version 2026.09.25
  */
 public class TermTest extends student.TestCase {

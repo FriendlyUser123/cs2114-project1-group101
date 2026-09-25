@@ -5,6 +5,8 @@ package calculator;
  * test plan.
  *
  * @author Aditya Banerjee (adityab7)
+ * @author Ethan Gearhart (ethang06)
+ * @author Nandini Duggaraju (nduggaraju)
  * @version 2026.09.25
  */
 public class FourFunctionCalculatorTest extends student.TestCase {

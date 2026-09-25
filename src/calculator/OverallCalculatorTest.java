@@ -12,6 +12,8 @@ import static org.junit.Assert.*;
  * which stands in for someone typing at the keyboard.
  *
  * @author Aditya Banerjee (adityab7)
+ * @author Ethan Gearhart (ethang06)
+ * @author Nandini Duggaraju (nduggaraju)
  * @version 2026.09.25
  */
 public class OverallCalculatorTest extends student.TestCase

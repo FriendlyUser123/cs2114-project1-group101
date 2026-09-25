@@ -4,6 +4,8 @@ package calculator;
  * Tests for {@link Polynomial}. Cases come from the Deliverable 2 test plan.
  *
  * @author Aditya Banerjee (adityab7)
+ * @author Ethan Gearhart (ethang06)
+ * @author Nandini Duggaraju (nduggaraju)
  * @version 2026.09.25
  */
 public class PolynomialTest extends student.TestCase {
