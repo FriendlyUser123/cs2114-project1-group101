@@ -136,6 +136,12 @@ public class OverallCalculator {
             {
                 System.out.println("Enter value 1 (Enter ANS for "
                     + "last result, Enter EXIT to go back to main menu): ");
+                
+                if (!scanner.hasNextLine())
+                {
+                    return lastResult;
+                }
+                
                 String in = scanner.nextLine();
                 if (in.equalsIgnoreCase("EXIT"))
                 {
