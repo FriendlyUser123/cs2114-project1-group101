@@ -1,1 +1,8 @@
 .classpath
+
+# compiled classes (Eclipse rebuilds these)
+bin/
+
+# editor swap files
+*.swp
+.swp

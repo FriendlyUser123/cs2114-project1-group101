@@ -1,9 +1,5 @@
 package calculator;
 
-import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.Test;
-
 /**
  * Tests for {@link FourFunctionCalculator}. Cases come from the Deliverable 2
  * test plan.
@@ -11,16 +7,14 @@ import org.junit.Test;
  * @author Aditya Banerjee (adityab7)
  * @version 2026.09.25
  */
-public class FourFunctionCalculatorTest
-{
+public class FourFunctionCalculatorTest extends student.TestCase {
     private static final double DELTA = 0.0001;
     private FourFunctionCalculator calc;
 
     /**
      * Creates a fresh calculator before each test.
      */
-    public void setUp()
-    {
+    public void setUp() {
         calc = new FourFunctionCalculator();
     }
 
@@ -28,9 +22,7 @@ public class FourFunctionCalculatorTest
     /**
      * Tests the constructor.
      */
-    @Test
-    public void testFourFunctionCalculator()
-    {
+    public void testFourFunctionCalculator() {
         FourFunctionCalculator testCalc = new FourFunctionCalculator();
 
         assertNotNull(testCalc);
@@ -42,9 +34,7 @@ public class FourFunctionCalculatorTest
      * Tests whether the calculator correctly reports if a previous result
      * exists.
      */
-    @Test
-    public void testHasLast()
-    {
+    public void testHasLast() {
         assertFalse(calc.hasLast());
 
         calc.setLast(8.5);
@@ -56,9 +46,7 @@ public class FourFunctionCalculatorTest
     /**
      * Tests storing valid results and rejecting invalid results.
      */
-    @Test
-    public void testSetLast()
-    {
+    public void testSetLast() {
         calc.setLast(8.5);
 
         assertTrue(calc.hasLast());
@@ -67,12 +55,10 @@ public class FourFunctionCalculatorTest
         // NaN cannot reach this method through normal terminal input.
         IllegalArgumentException nanException = null;
 
-        try
-        {
+        try {
             calc.setLast(Double.NaN);
         }
-        catch (IllegalArgumentException e)
-        {
+        catch (IllegalArgumentException e) {
             nanException = e;
         }
 
@@ -84,12 +70,10 @@ public class FourFunctionCalculatorTest
         // Infinity cannot reach this method through normal terminal input.
         IllegalArgumentException infinityException = null;
 
-        try
-        {
+        try {
             calc.setLast(Double.POSITIVE_INFINITY);
         }
-        catch (IllegalArgumentException e)
-        {
+        catch (IllegalArgumentException e) {
             infinityException = e;
         }
 
@@ -104,17 +88,13 @@ public class FourFunctionCalculatorTest
      * Tests retrieving the last result and attempting to retrieve a result
      * before one exists.
      */
-    @Test
-    public void testGetLast()
-    {
+    public void testGetLast() {
         IllegalStateException exception = null;
 
-        try
-        {
+        try {
             calc.getLast();
         }
-        catch (IllegalStateException e)
-        {
+        catch (IllegalStateException e) {
             exception = e;
         }
 
@@ -129,21 +109,17 @@ public class FourFunctionCalculatorTest
     /**
      * Tests validation of doubles.
      */
-    @Test
-    public void testCheckDouble()
-    {
+    public void testCheckDouble() {
         // Normal finite values should be accepted.
         calc.checkDouble(5.0, -3.5);
 
         // First number is NaN.
         IllegalArgumentException firstNaNException = null;
 
-        try
-        {
+        try {
             calc.checkDouble(Double.NaN, 5.0);
         }
-        catch (IllegalArgumentException e)
-        {
+        catch (IllegalArgumentException e) {
             firstNaNException = e;
         }
 
@@ -152,12 +128,10 @@ public class FourFunctionCalculatorTest
         // First number is infinite.
         IllegalArgumentException firstInfinityException = null;
 
-        try
-        {
+        try {
             calc.checkDouble(Double.POSITIVE_INFINITY, 5.0);
         }
-        catch (IllegalArgumentException e)
-        {
+        catch (IllegalArgumentException e) {
             firstInfinityException = e;
         }
 
@@ -166,12 +140,10 @@ public class FourFunctionCalculatorTest
         // Second number is NaN.
         IllegalArgumentException secondNaNException = null;
 
-        try
-        {
+        try {
             calc.checkDouble(5.0, Double.NaN);
         }
-        catch (IllegalArgumentException e)
-        {
+        catch (IllegalArgumentException e) {
             secondNaNException = e;
         }
 
@@ -180,12 +152,10 @@ public class FourFunctionCalculatorTest
         // Second number is infinite.
         IllegalArgumentException secondInfinityException = null;
 
-        try
-        {
+        try {
             calc.checkDouble(5.0, Double.POSITIVE_INFINITY);
         }
-        catch (IllegalArgumentException e)
-        {
+        catch (IllegalArgumentException e) {
             secondInfinityException = e;
         }
 
@@ -196,9 +166,7 @@ public class FourFunctionCalculatorTest
     /**
      * Tests normal addition and addition overflow.
      */
-    @Test
-    public void testAdd()
-    {
+    public void testAdd() {
         double result = calc.add(5.0, 8.0);
 
         assertEquals(13.0, result, DELTA);
@@ -207,12 +175,10 @@ public class FourFunctionCalculatorTest
 
         ArithmeticException exception = null;
 
-        try
-        {
+        try {
             calc.add(Double.MAX_VALUE, Double.MAX_VALUE);
         }
-        catch (ArithmeticException e)
-        {
+        catch (ArithmeticException e) {
             exception = e;
         }
 
@@ -226,9 +192,7 @@ public class FourFunctionCalculatorTest
     /**
      * Tests normal subtraction and subtraction overflow.
      */
-    @Test
-    public void testSubtract()
-    {
+    public void testSubtract() {
         double result = calc.subtract(10.0, 4.0);
 
         assertEquals(6.0, result, DELTA);
@@ -237,12 +201,10 @@ public class FourFunctionCalculatorTest
 
         ArithmeticException exception = null;
 
-        try
-        {
+        try {
             calc.subtract(Double.MAX_VALUE, -Double.MAX_VALUE);
         }
-        catch (ArithmeticException e)
-        {
+        catch (ArithmeticException e) {
             exception = e;
         }
 
@@ -256,9 +218,7 @@ public class FourFunctionCalculatorTest
     /**
      * Tests normal multiplication and multiplication overflow.
      */
-    @Test
-    public void testMultiply()
-    {
+    public void testMultiply() {
         double result = calc.multiply(4.0, 5.0);
 
         assertEquals(20.0, result, DELTA);
@@ -267,12 +227,10 @@ public class FourFunctionCalculatorTest
 
         ArithmeticException exception = null;
 
-        try
-        {
+        try {
             calc.multiply(Double.MAX_VALUE, 2.0);
         }
-        catch (ArithmeticException e)
-        {
+        catch (ArithmeticException e) {
             exception = e;
         }
 
@@ -286,9 +244,7 @@ public class FourFunctionCalculatorTest
     /**
      * Tests normal division, divide by zero, and division overflow.
      */
-    @Test
-    public void testDivide()
-    {
+    public void testDivide() {
         double result = calc.divide(10.0, 2.0);
 
         assertEquals(5.0, result, DELTA);
@@ -298,12 +254,10 @@ public class FourFunctionCalculatorTest
         // Divide by zero.
         IllegalArgumentException zeroException = null;
 
-        try
-        {
+        try {
             calc.divide(10.0, 0.0);
         }
-        catch (IllegalArgumentException e)
-        {
+        catch (IllegalArgumentException e) {
             zeroException = e;
         }
 
@@ -316,12 +270,10 @@ public class FourFunctionCalculatorTest
         // overflows to infinity.
         IllegalArgumentException overflowException = null;
 
-        try
-        {
+        try {
             calc.divide(Double.MAX_VALUE, Double.MIN_VALUE);
         }
-        catch (IllegalArgumentException e)
-        {
+        catch (IllegalArgumentException e) {
             overflowException = e;
         }
 

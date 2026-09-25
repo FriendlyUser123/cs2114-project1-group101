@@ -38,6 +38,7 @@ public class Term {
 
     // ~ Public Methods ........................................................
 
+
     /**
      * Sets this term's coefficient.
      *
@@ -50,8 +51,7 @@ public class Term {
      *             if the coefficient is NaN or infinite
      */
     public void setCoefficient(double coefficient) {
-        if (Double.isNaN(coefficient) || Double.isInfinite(coefficient))
-        {
+        if (Double.isNaN(coefficient) || Double.isInfinite(coefficient)) {
             throw new IllegalArgumentException("Invalid entry, try again");
         }
         this.coefficient = coefficient;
@@ -69,10 +69,9 @@ public class Term {
      *             if the degree is negative
      */
     public void setDegree(int degree) {
-        if (degree < 0)
-        {
-            throw new IllegalArgumentException("Dgree must "
-                + "be greater than zero");
+        if (degree < 0) {
+            throw new IllegalArgumentException("Degree must "
+                + "not be negative");
         }
         this.degree = degree;
     }
